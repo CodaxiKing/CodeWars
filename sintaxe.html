@@ -1,0 +1,1730 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sintaxe</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --bg:#ECEEF2; --board:#E3E6EB; --dot:#C9CED7;
+  --surface:#FFFFFF; --surface-2:#F4F5F8; --ink:#12151B; --muted:#5A6170; --line:#D9DDE3;
+  --accent:#F2B705; --accent-soft:#FCEFC2; --accent-ink:#7A5800;
+  --ok:#0F8457; --ok-soft:#DDF3E9; --bad:#C3372C; --bad-soft:#FBE3E0; --info:#2D57CF; --info-soft:#E1E8FB;
+  --code-bg:#161A21; --code-fg:#D9DEE7; --code-line:#232833; --code-hl:#2A2F1C;
+  --kb:#D3D7DD; --key:#FFFFFF; --key-2:#ADB3BD; --key-ink:#12151B;
+  --scrim:rgba(12,15,20,.45);
+  --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --sans:"IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#0E1115; --board:#12161B; --dot:#262C35;
+    --surface:#181C23; --surface-2:#1F242C; --ink:#E7EAF0; --muted:#9AA2B0; --line:#2C323C;
+    --accent:#F5C518; --accent-soft:#3A3113; --accent-ink:#F5C518;
+    --ok:#3CC98C; --ok-soft:#133226; --bad:#F06A5F; --bad-soft:#3A1B19; --info:#86A3FF; --info-soft:#1B2542;
+    --code-bg:#0B0D11; --code-line:#1A1E26; --code-hl:#26291A;
+    --kb:#23272F; --key:#3A404B; --key-2:#2C313A; --key-ink:#E7EAF0;
+    --scrim:rgba(0,0,0,.55);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0E1115; --board:#12161B; --dot:#262C35;
+  --surface:#181C23; --surface-2:#1F242C; --ink:#E7EAF0; --muted:#9AA2B0; --line:#2C323C;
+  --accent:#F5C518; --accent-soft:#3A3113; --accent-ink:#F5C518;
+  --ok:#3CC98C; --ok-soft:#133226; --bad:#F06A5F; --bad-soft:#3A1B19; --info:#86A3FF; --info-soft:#1B2542;
+  --code-bg:#0B0D11; --code-line:#1A1E26; --code-hl:#26291A;
+  --kb:#23272F; --key:#3A404B; --key-2:#2C313A; --key-ink:#E7EAF0;
+  --scrim:rgba(0,0,0,.55);
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:15px/1.6 var(--sans);margin:0}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:20px}
+h1,h2,h3,h4{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.1}
+p{margin:0}
+code,.mono{font-family:var(--mono)}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* ---------- header ---------- */
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:18px;border-bottom:1px solid var(--line)}
+.brand{font-family:var(--display);font-weight:800;font-size:20px;display:flex;align-items:center}
+.caret{display:inline-block;width:3px;height:1.05em;background:var(--accent);margin-left:3px;animation:blink 1.1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.top nav{display:flex;gap:18px;flex-wrap:wrap;font-size:14px;color:var(--muted)}
+.top nav a{text-decoration:none}.top nav a:hover{color:var(--ink)}
+.hero{padding-block:56px 40px;display:grid;grid-template-columns:1.3fr 1fr;gap:48px;align-items:end}
+.eyebrow{font:600 12px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.hero h1{font-size:clamp(34px,5.2vw,60px);font-weight:800;letter-spacing:-.02em;margin-top:14px}
+.hero h1 mark{background:linear-gradient(transparent 58%,var(--accent) 58%);color:inherit;padding:0 .08em}
+.hero .lede{font-size:17px;color:var(--muted);max-width:60ch;margin-top:18px}
+.thesis{border-left:3px solid var(--ink);padding:4px 0 4px 18px;display:grid;gap:10px;font-size:14px}
+.thesis b{font-family:var(--display);font-size:17px}
+.thesis dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:6px 14px}
+.thesis dt{font:600 12px/1.6 var(--mono);color:var(--muted)}
+.thesis dd{margin:0}
+
+/* ---------- canvas ---------- */
+.canvas-head{display:flex;justify-content:space-between;align-items:end;gap:16px;flex-wrap:wrap;margin-bottom:14px}
+.canvas-head h2{font-size:30px}
+.canvas-head p{color:var(--muted);font-size:14px;margin-top:6px}
+.tools{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.tools button{font:500 13px var(--sans);background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:6px 11px;cursor:pointer}
+.tools button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.jump{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.jump button{font:500 12px var(--mono);background:transparent;color:var(--muted);border:1px dashed var(--line);border-radius:999px;padding:4px 10px;cursor:pointer}
+.jump button:hover{color:var(--ink);border-color:var(--muted)}
+.board{background-color:var(--board);background-image:radial-gradient(var(--dot) 1px,transparent 1.3px);background-size:22px 22px;border:1px solid var(--line);border-radius:10px;overflow:auto;height:min(82vh,960px);cursor:grab}
+.board.dragging{cursor:grabbing;user-select:none}
+.board-inner{padding:40px;width:max-content;display:grid;gap:72px}
+.lane{display:grid;gap:20px}
+.lane-label{display:flex;align-items:baseline;gap:14px}
+.lane-label h3{font-size:24px;font-weight:700}
+.lane-label span{font-size:13.5px;color:var(--muted);max-width:80ch}
+.lane-row{display:flex;gap:40px;align-items:flex-start}
+
+.frame{margin:0;width:340px;display:grid;gap:14px;align-content:start}
+figcaption{display:grid;gap:6px;padding-inline:4px}
+figcaption .num{font:600 12px var(--mono);color:var(--muted)}
+figcaption h4{font:700 17px/1.2 var(--display)}
+figcaption p{font-size:13.5px;color:var(--muted)}
+.tags{display:flex;gap:6px;flex-wrap:wrap;list-style:none;margin:2px 0 0;padding:0}
+.tags li{font:500 11.5px var(--mono);background:var(--accent-soft);color:var(--accent-ink);padding:2px 8px;border-radius:4px}
+.board.no-notes figcaption p,.board.no-notes .tags{display:none}
+
+/* ---------- phone ---------- */
+.phone{width:340px;height:716px;border-radius:48px;background:#0A0C10;padding:9px;box-shadow:0 0 0 1px #2A2F38,0 30px 60px -30px rgba(10,14,22,.55)}
+.scr{height:100%;border-radius:40px;overflow:hidden;background:var(--surface);display:flex;flex-direction:column;position:relative;font-size:13px;line-height:1.45;color:var(--ink)}
+.sbar{display:flex;justify-content:space-between;align-items:center;padding:14px 26px 6px;font:600 12.5px var(--sans);position:relative;flex:none}
+.sbar::after{content:"";position:absolute;top:10px;left:50%;transform:translateX(-50%);width:92px;height:26px;border-radius:14px;background:#0A0C10}
+.sbar .ic{display:flex;gap:4px;align-items:center}
+.sbar .ic i{display:block;width:15px;height:8px;border:1.3px solid currentColor;border-radius:2.5px;position:relative}
+.sbar .ic i::after{content:"";position:absolute;inset:1px;right:4px;background:currentColor;border-radius:1px}
+.sbar .ic s{display:block;width:13px;height:8px;background:linear-gradient(90deg,currentColor 20%,transparent 20% 33%,currentColor 33% 53%,transparent 53% 66%,currentColor 66%);clip-path:polygon(0 100%,100% 0,100% 100%)}
+.hdr{display:flex;align-items:center;gap:10px;padding:6px 18px 10px;flex:none}
+.hdr .t{font:700 15px var(--display);flex:1}
+.back{width:30px;height:30px;border-radius:50%;background:var(--surface-2);display:grid;place-items:center;font-size:15px;color:var(--ink)}
+.body{flex:1;min-height:0;overflow:hidden;padding:0 18px 12px;display:flex;flex-direction:column;gap:12px}
+.homebar{height:22px;flex:none;display:grid;place-items:center}
+.homebar::before{content:"";width:118px;height:4.5px;border-radius:3px;background:var(--ink);opacity:.85}
+.tabbar{flex:none;display:grid;grid-template-columns:repeat(5,1fr);border-top:1px solid var(--line);padding:8px 4px 0;background:var(--surface)}
+.tabbar span{display:grid;justify-items:center;gap:2px;font-size:10px;color:var(--muted)}
+.tabbar span.on{color:var(--ink);font-weight:600}
+.tabbar svg{width:20px;height:20px}
+.cta{flex:none;padding:0 18px 6px;display:grid;gap:8px}
+
+.lbl{font:600 10.5px var(--mono);letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.muted{color:var(--muted)} .small{font-size:11.5px}
+.h1m{font:800 23px/1.12 var(--display);letter-spacing:-.01em}
+.h2m{font:700 16px/1.2 var(--display)}
+.pill{display:inline-flex;align-items:center;gap:5px;font:500 10.5px var(--mono);padding:2px 8px;border-radius:999px;border:1px solid var(--line);color:var(--muted);white-space:nowrap;justify-self:start;align-self:start}
+.pill.ok{background:var(--ok-soft);color:var(--ok);border-color:transparent}
+.pill.bad{background:var(--bad-soft);color:var(--bad);border-color:transparent}
+.pill.acc{background:var(--accent-soft);color:var(--accent-ink);border-color:transparent}
+.pill.info{background:var(--info-soft);color:var(--info);border-color:transparent}
+.btn{display:flex;align-items:center;justify-content:center;gap:6px;font:600 14px var(--sans);height:48px;border-radius:14px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.btn.pri{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.btn.acc{background:var(--accent);color:#1b1500;border-color:var(--accent)}
+.btn.dis{background:var(--surface-2);color:var(--muted);border-color:var(--line)}
+.btn.sm{height:36px;font-size:12.5px;border-radius:10px;padding:0 12px}
+.link{font-size:12.5px;color:var(--muted);text-align:center;text-decoration:underline;text-underline-offset:3px}
+.segs{display:flex;gap:4px}
+.segs i{flex:1;height:4px;border-radius:2px;background:var(--line)}
+.segs i.d{background:var(--ink)}.segs i.c{background:var(--accent)}
+.bar{height:6px;background:var(--surface-2);border:1px solid var(--line);border-radius:99px;overflow:hidden}
+.bar>b{display:block;height:100%;background:var(--ink)}
+.bar.acc>b{background:var(--accent)}.bar.ok>b{background:var(--ok)}
+.card{border:1px solid var(--line);border-radius:14px;padding:12px;display:grid;gap:6px;background:var(--surface)}
+.card.soft{background:var(--surface-2);border-color:transparent}
+
+pre.code{margin:0;background:var(--code-bg);color:var(--code-fg);font:11px/1.7 var(--mono);padding:9px 0;border-radius:12px;overflow:hidden;counter-reset:ln}
+pre.code .l{display:block;padding-right:10px;white-space:pre}
+pre.code .l::before{counter-increment:ln;content:counter(ln);display:inline-block;width:24px;padding-right:9px;text-align:right;color:#4B5261}
+pre.code .l.hl{background:var(--code-hl);box-shadow:inset 3px 0 0 #F5C518}
+pre.code .l.err{background:#3A1B19;box-shadow:inset 3px 0 0 #F06A5F}
+pre.code .l.dim{opacity:.45}
+.k{color:#FF9E64}.s{color:#A8D8A0}.f{color:#82AAFF}.n{color:#F5C518}.c{color:#6B7385;font-style:italic}.t{color:#7DD3FC}.a{color:#FFCB6B}
+.cur{display:inline-block;width:2px;height:13px;background:#F5C518;vertical-align:-2px;margin-left:1px}
+.console{background:var(--code-bg);color:var(--code-fg);font:11px/1.6 var(--mono);padding:8px 12px;border-radius:12px}
+.console .dim{color:#6B7385}
+
+/* specific */
+.choice{border:1.5px solid var(--line);border-radius:14px;padding:12px 14px;display:grid;gap:2px}
+.choice b{font-size:13.5px}
+.choice.on{border-color:var(--ink);background:var(--surface-2)}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{border:1.5px solid var(--line);border-radius:999px;padding:6px 14px;font:500 13px var(--sans)}
+.chip.on{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.chip.m{font-family:var(--mono)}
+.toggle{width:40px;height:24px;border-radius:12px;background:var(--ok);position:relative;flex:none}
+.toggle::after{content:"";position:absolute;right:3px;top:3px;width:18px;height:18px;border-radius:50%;background:#fff}
+.row{display:flex;align-items:center;gap:10px}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.opt{border:1.5px solid var(--line);border-radius:14px;height:54px;display:grid;place-items:center;font:600 15px var(--mono)}
+.opt.on{border-color:var(--ink);background:var(--surface-2);box-shadow:inset 0 0 0 1px var(--ink)}
+.conf{display:grid;grid-template-columns:repeat(3,1fr);background:var(--surface-2);border-radius:12px;padding:3px}
+.conf span{text-align:center;padding:7px 0;font-size:12px;border-radius:9px;color:var(--muted)}
+.conf span.on{background:var(--surface);color:var(--ink);font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.12)}
+
+.session{background:var(--ink);color:var(--surface);border-radius:20px;padding:16px;display:grid;gap:12px}
+.session .lbl{color:var(--accent)}
+.session ol{margin:0;padding:0;list-style:none;display:grid;gap:9px}
+.session li{display:grid;grid-template-columns:22px 1fr auto;gap:10px;align-items:center;font-size:13px}
+.session li i{width:22px;height:22px;border-radius:50%;border:1.5px solid currentColor;opacity:.7;display:grid;place-items:center;font:600 10px var(--mono);font-style:normal}
+.session li small{font:11px var(--mono);opacity:.7}
+.session .go{background:var(--accent);color:#1b1500;border-radius:12px;height:44px;display:grid;place-items:center;font-weight:600}
+.week{display:flex;gap:6px}
+.week span{flex:1;display:grid;justify-items:center;gap:4px;font:10px var(--mono);color:var(--muted)}
+.week span b{width:26px;height:26px;border-radius:50%;background:var(--surface-2);border:1px solid var(--line)}
+.week span.y b{background:var(--ok);border-color:var(--ok)}
+.week span.t b{border:2px solid var(--ink)}
+
+.seg3{display:grid;grid-template-columns:repeat(3,1fr);background:var(--surface-2);border-radius:12px;padding:3px}
+.seg3 span{text-align:center;padding:6px 0;font:600 12px var(--mono);border-radius:9px;color:var(--muted)}
+.seg3 span.on{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.tree{display:grid;gap:0;position:relative;padding-left:4px}
+.tn{display:grid;grid-template-columns:34px 1fr;gap:12px;align-items:center;padding-block:7px;position:relative}
+.tn::before{content:"";position:absolute;left:16px;top:0;bottom:0;width:2px;background:var(--line);z-index:0}
+.tn:first-child::before{top:50%}.tn:last-child::before{bottom:50%}
+.tn i{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font:700 13px var(--mono);font-style:normal;position:relative;z-index:1;background:var(--surface);border:2px solid var(--line);color:var(--muted)}
+.tn.d i{background:var(--ok);border-color:var(--ok);color:#fff}
+.tn.r i{border-style:dashed;border-color:var(--accent-ink);color:var(--accent-ink)}
+.tn.c i{border-color:var(--ink);background:var(--accent);color:#1b1500}
+.tn b{font-size:13.5px;display:block}
+.tn small{font-size:11.5px;color:var(--muted)}
+.tn.l{opacity:.55}
+
+.pred{background:var(--accent-soft);border-radius:16px;padding:12px;display:grid;gap:10px}
+.pred .lbl{color:var(--accent-ink)}
+.numpad{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.numpad span{background:var(--surface);border:1.5px solid var(--line);border-radius:10px;height:40px;display:grid;place-items:center;font:600 15px var(--mono)}
+.numpad span.on{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+
+.scrim{position:absolute;inset:0;background:var(--scrim);z-index:2}
+.sheet{position:absolute;left:0;right:0;bottom:0;z-index:3;background:var(--surface);border-radius:26px 26px 0 0;padding:10px 18px 0;display:grid;gap:12px}
+.sheet::before{content:"";justify-self:center;width:38px;height:4.5px;border-radius:3px;background:var(--line)}
+.verdict{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:center}
+.verdict .big{width:46px;height:46px;border-radius:14px;background:var(--info-soft);color:var(--info);display:grid;place-items:center;font:800 20px var(--display)}
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.compare div{border-radius:12px;padding:10px;display:grid;gap:2px}
+.compare b{font:700 24px var(--mono)}
+
+.etabs{display:flex;gap:4px;background:var(--surface-2);border-radius:12px;padding:3px}
+.etabs span{flex:1;text-align:center;padding:6px 0;font:600 12px var(--sans);border-radius:9px;color:var(--muted)}
+.etabs span.on{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.kbd{flex:none;background:var(--kb);padding:6px 4px 4px;display:grid;gap:6px}
+.sugg{display:flex;gap:5px;padding:0 2px;overflow:hidden}
+.sugg span{background:var(--key);color:var(--key-ink);border-radius:8px;padding:5px 10px;font:600 12px var(--mono);white-space:nowrap}
+.sugg span.hot{background:var(--accent);color:#1b1500}
+.krow{display:grid;gap:5px;padding:0 2px}
+.krow.c10{grid-template-columns:repeat(10,1fr)}
+.krow span{background:var(--key);color:var(--key-ink);border-radius:6px;height:38px;display:grid;place-items:center;font:500 14px var(--mono);box-shadow:0 1px 0 rgba(0,0,0,.25)}
+.krow span.m{background:var(--key-2);font:600 11px var(--sans)}
+.krow.last{grid-template-columns:1.3fr 1fr 1fr 3fr 1fr 1.3fr}
+
+.stepctl{display:grid;grid-template-columns:52px 1fr 52px;gap:10px;align-items:center}
+.stepctl .rb{height:52px;border-radius:16px;background:var(--surface-2);display:grid;place-items:center;font-size:18px}
+.stepctl .rb.pri{background:var(--ink);color:var(--surface)}
+.scrub{height:4px;background:var(--line);border-radius:2px;position:relative}
+.scrub b{position:absolute;left:0;top:0;bottom:0;width:50%;background:var(--accent);border-radius:2px}
+.scrub b::after{content:"";position:absolute;right:-7px;top:-5px;width:14px;height:14px;border-radius:50%;background:var(--ink)}
+.fbox{border:1.5px solid var(--line);border-radius:12px;padding:8px 10px;display:grid;gap:2px;font:12px var(--mono)}
+.fbox .h{font:600 11px var(--sans);color:var(--muted)}
+.fbox.top{border-color:var(--ink);box-shadow:inset 3px 0 0 var(--accent)}
+.chg{background:var(--accent-soft);color:var(--accent-ink);padding:0 4px;border-radius:3px}
+
+.tapcode{border-radius:14px;background:var(--code-bg);padding:6px 0;font:11px/1 var(--mono);color:var(--code-fg)}
+.tapcode div{padding:9px 10px;white-space:pre;border-bottom:1px solid var(--code-line)}
+.tapcode div:last-child{border-bottom:0}
+.tapcode div.sel{background:#3A1B19;box-shadow:inset 3px 0 0 #F06A5F}
+.hintr{display:flex;gap:6px}
+.hintr span{flex:1;border:1.5px dashed var(--line);border-radius:10px;padding:6px 4px;text-align:center;font-size:11px;color:var(--muted)}
+.hintr span.u{border-style:solid;border-color:var(--ink);color:var(--ink);font-weight:600}
+
+.stage{border-radius:16px;background:var(--surface-2);padding:12px;display:grid;gap:10px;position:relative}
+.mini{border:1px solid var(--line);border-radius:10px;background:var(--surface);padding:10px;display:grid;gap:8px;position:relative}
+.mini .r{display:flex;gap:8px;align-items:center}
+.mini .av{width:28px;height:28px;border-radius:50%;background:var(--ink);flex:none}
+.mini .ln{height:6px;border-radius:3px;background:var(--line)}
+.gridx{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.gridx i{height:34px;border-radius:4px;background:var(--accent)}
+.ghost{position:absolute;inset:0;border-radius:10px;border:2px dashed var(--info);opacity:.8;pointer-events:none}
+.ghost::after{content:"alvo";position:absolute;right:6px;top:-9px;background:var(--info);color:#fff;font:600 9.5px var(--mono);padding:1px 5px;border-radius:4px}
+.props{display:grid;gap:0;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.prop{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-bottom:1px solid var(--line);font:12px var(--mono)}
+.prop:last-child{border-bottom:0}
+.prop .pn{color:var(--muted)}
+.prop.on{background:var(--accent-soft)}
+.stepper{display:flex;align-items:center;gap:0;border:1.5px solid var(--ink);border-radius:9px;overflow:hidden;font-weight:600}
+.stepper span{padding:3px 9px}
+.stepper span:nth-child(2){background:var(--ink);color:var(--surface)}
+.slider{height:4px;background:var(--line);border-radius:2px;position:relative;width:90px}
+.slider b{position:absolute;left:0;top:0;bottom:0;width:30%;background:var(--ink);border-radius:2px}
+.slider b::after{content:"";position:absolute;right:-8px;top:-6px;width:16px;height:16px;border-radius:50%;background:var(--surface);border:2px solid var(--ink)}
+
+.parsons{display:grid;gap:7px}
+.pl{display:grid;grid-template-columns:18px 1fr;gap:8px;align-items:center;background:var(--code-bg);color:var(--code-fg);border-radius:10px;padding:9px 10px;font:11px var(--mono);white-space:pre}
+.pl::before{content:"⋮⋮";color:#4B5261;font-size:11px;letter-spacing:-2px}
+.pl.lift{transform:rotate(-1.5deg) translateX(8px);box-shadow:0 10px 24px -6px rgba(0,0,0,.45);outline:2px solid #F5C518}
+.slot{border:1.5px dashed var(--line);border-radius:10px;height:34px}
+.rate4{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.rate4 span{border:1.5px solid var(--line);border-radius:12px;padding:6px 0;text-align:center;display:grid;font-size:12px}
+.rate4 small{font:10px var(--mono);color:var(--muted)}
+
+.msg{border-radius:16px;padding:9px 12px;font-size:12.5px;max-width:88%}
+.msg.me{background:var(--ink);color:var(--surface);justify-self:end;border-bottom-right-radius:5px}
+.msg.ai{background:var(--surface-2);border-bottom-left-radius:5px}
+.msg code{font-size:11.5px;background:var(--surface);padding:0 3px;border-radius:3px}
+.msg.me code{background:transparent}
+.who{font:600 10px var(--mono);color:var(--muted);display:block;margin-bottom:2px}
+.input{border:1.5px solid var(--line);border-radius:22px;height:42px;display:flex;align-items:center;justify-content:space-between;padding:0 6px 0 14px;color:var(--muted);font-size:12.5px}
+.input b{width:30px;height:30px;border-radius:50%;background:var(--ink);color:var(--surface);display:grid;place-items:center}
+
+.mastery{display:grid;gap:8px}
+.mastery div{display:grid;grid-template-columns:78px 1fr 34px;gap:8px;align-items:center;font-size:12px}
+.mastery div span:last-child{font:11px var(--mono);text-align:right;font-variant-numeric:tabular-nums;color:var(--muted)}
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.kpi{background:var(--surface-2);border-radius:14px;padding:10px 12px}
+.kpi b{font:800 24px var(--display);display:block;font-variant-numeric:tabular-nums}
+.errs{display:grid;gap:6px;font-size:12px}
+.errs div{display:flex;justify-content:space-between;gap:8px;border-bottom:1px dotted var(--line);padding-bottom:5px}
+
+/* lógica */
+.flow{width:100%;height:auto;display:block}
+.tt{display:grid;grid-template-columns:48px 1fr 1fr 1fr;border:1px solid var(--line);border-radius:12px;overflow:hidden;font:12px var(--mono)}
+.tt span{padding:7px 6px;border-bottom:1px solid var(--line);text-align:center;font-variant-numeric:tabular-nums}
+.tt .th{font:600 10px var(--mono);letter-spacing:.05em;color:var(--muted);background:var(--surface-2);text-transform:uppercase}
+.tt .now{background:var(--accent-soft);font-weight:600}
+.tt .gap{border:2px dashed var(--accent-ink);border-radius:6px;margin:3px;padding:3px 0;color:var(--accent-ink)}
+.tt .last{border-bottom:0}
+
+/* JS na página */
+.pv{border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:14px 12px 12px;display:grid;gap:9px}
+.pv .h5{font:700 16px var(--display)}
+.pv .inp{border:1.5px solid var(--line);border-radius:8px;padding:6px 10px;font-size:12px;color:var(--muted)}
+.pv .inp.typed{color:var(--ink);font-family:var(--mono)}
+.pv .b{background:var(--ink);color:var(--surface);border-radius:8px;padding:6px 12px;justify-self:start;font-weight:600;font-size:12px}
+.pv .picked{outline:2px solid var(--info);outline-offset:3px;position:relative}
+.pv .picked::after{content:attr(data-tag);position:absolute;left:-3px;top:-25px;background:var(--info);color:#fff;font:600 10px var(--mono);padding:2px 6px;border-radius:4px;white-space:nowrap}
+.pv .out{font-size:13px;color:var(--ok);font-weight:600}
+.objp{display:grid;gap:0;border:1px solid var(--line);border-radius:12px;overflow:hidden;font:11.5px var(--mono)}
+.objp div{display:flex;justify-content:space-between;gap:8px;padding:6px 10px;border-bottom:1px solid var(--line)}
+.objp div:last-child{border-bottom:0}
+.objp .pn{color:var(--muted)}
+.sent{display:flex;flex-wrap:wrap;gap:7px;align-items:center;font:600 14px var(--display);line-height:1.2}
+.bk{display:inline-flex;align-items:center;gap:4px;border-radius:9px;padding:5px 9px;font:600 12px var(--mono);border:1.5px solid}
+.bk::after{content:"▾";font-size:9px;opacity:.7}
+.bk.pg{background:var(--info-soft);color:var(--info);border-color:var(--info)}
+.bk.ov{background:var(--accent-soft);color:var(--accent-ink);border-color:var(--accent)}
+.bk.rg{background:var(--ok-soft);color:var(--ok);border-color:var(--ok)}
+.u-pg{box-shadow:inset 0 -2px 0 #86A3FF}.u-ov{box-shadow:inset 0 -2px 0 #F5C518}.u-rg{box-shadow:inset 0 -2px 0 #3CC98C}
+.lvls{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.lvls span{border-radius:10px;padding:6px 4px;text-align:center;font-size:11px;background:var(--surface-2);color:var(--muted)}
+.lvls span.on{background:var(--ink);color:var(--surface);font-weight:600}
+.errc{background:var(--bad-soft);border-radius:14px;padding:10px 12px;display:grid;gap:4px}
+.errc code{font-size:10.5px;color:var(--bad);word-break:break-word}
+.readlist{display:grid;border-radius:14px;background:var(--code-bg);overflow:hidden;font:11px var(--mono);color:var(--code-fg)}
+.readlist div{display:grid;grid-template-columns:12px 1fr;gap:8px;padding:7px 10px;border-bottom:1px solid var(--code-line);align-items:start}
+.readlist div:last-child{border-bottom:0}
+.readlist .mk{width:8px;height:8px;border-radius:50%;background:#4B5261;margin-top:4px}
+.readlist pre{margin:0;font:inherit;white-space:pre}
+.readlist small{display:block;font:600 10.5px var(--sans);margin-top:3px;white-space:normal}
+.readlist .run{background:#3A1B19}.readlist .run .mk{background:#F06A5F}.readlist .run small{color:#F06A5F}
+.readlist .born{background:#133226}.readlist .born .mk{background:#3CC98C}.readlist .born small{color:#3CC98C}
+
+/* nível zero */
+.big{font-size:15px;line-height:1.5}
+.caixa-wrap{display:grid;place-items:center;padding:22px 0 18px}
+.caixa{width:150px;height:92px;border:3px solid var(--ink);border-radius:6px 6px 16px 16px;background:var(--accent-soft);position:relative;display:grid;place-items:center;font:800 40px var(--display);color:var(--ink)}
+.caixa::before{content:"";position:absolute;left:-10px;right:-10px;top:-18px;height:13px;border:3px solid var(--ink);border-radius:6px;background:var(--accent);transform:rotate(-9deg);transform-origin:left bottom}
+.etq{position:absolute;bottom:-15px;left:50%;transform:translateX(-50%);background:var(--surface);border:2px solid var(--ink);border-radius:6px;padding:1px 10px;font:600 13px var(--mono)}
+.drag{display:flex;gap:12px;justify-content:center;align-items:end}
+.tok{min-width:52px;height:52px;border-radius:14px;border:2px solid var(--ink);display:grid;place-items:center;font:800 22px var(--display);background:var(--surface);padding:0 10px}
+.tok.lift{transform:translateY(-10px) rotate(-6deg);box-shadow:0 12px 20px -8px rgba(0,0,0,.45);background:var(--accent);color:#1b1500}
+.tok.txt{font-size:15px}
+.zero-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.zc{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;display:grid;gap:8px;align-content:start}
+.zc .id{font:700 12px var(--mono);background:var(--accent);color:#1b1500;border-radius:4px;padding:1px 7px;justify-self:start}
+.zc h3{font-size:17px}
+.zc p{font-size:13.5px;color:var(--muted)}
+.zc code{font-size:12px;background:var(--code-bg);color:var(--code-fg);border-radius:6px;padding:6px 9px;display:block;overflow-x:auto;white-space:pre}
+.rules{display:grid;grid-template-columns:repeat(3,1fr);gap:10px 28px;margin:0 0 28px;padding:0;list-style:none}
+.rules li{font-size:14px;display:grid;gap:2px;border-top:1px solid var(--line);padding-top:10px}
+.rules b{font-family:var(--display);font-size:15.5px}
+.rules span{color:var(--muted)}
+.trk li.zero code{color:var(--accent-ink);font-weight:600}
+.trk li.zero{font-weight:600}
+
+/* arena */
+.enemy{display:grid;grid-template-columns:46px 1fr auto;gap:12px;align-items:center;border:1.5px solid var(--line);border-radius:14px;padding:10px 12px;background:var(--surface)}
+.enemy .av{width:46px;height:46px;border-radius:13px;display:grid;place-items:center}
+.enemy .av svg{width:34px;height:34px}
+.enemy b{font-size:13.5px;display:block}
+.enemy small{font-size:11px;color:var(--muted);display:block}
+.enemy.done{opacity:.55}
+.enemy.boss{border:2px solid var(--ink);background:var(--surface-2)}
+.enemy.lock{border-style:dashed}
+.arena{border-radius:18px;background:var(--surface-2);padding:12px;display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:end}
+.fighter{display:grid;justify-items:center;gap:5px}
+.fighter svg{width:64px;height:64px}
+.fighter .nm{font:600 11px var(--mono)}
+.hp{width:100%;height:8px;border-radius:4px;background:var(--line);overflow:hidden}
+.hp b{display:block;height:100%;background:var(--ok)}
+.hp.en b{background:var(--bad)}
+.hpn{font:600 10.5px var(--mono);color:var(--muted);font-variant-numeric:tabular-nums}
+.vs-mark{font:800 18px var(--display);color:var(--muted);align-self:center}
+.shield{font:600 10px var(--mono);background:var(--info-soft);color:var(--info);border-radius:4px;padding:1px 6px}
+.intent{border:1.5px dashed var(--bad);border-radius:12px;padding:8px 10px;display:grid;gap:4px;font-size:12px}
+.intent code{font-size:11.5px}
+.hand{display:flex;gap:6px;flex-wrap:wrap}
+.hand .bk::after{content:none}
+.turnlog{display:grid;gap:6px}
+.turnlog div{display:grid;grid-template-columns:34px 1fr auto;gap:8px;align-items:center;font-size:12.5px;border-bottom:1px dotted var(--line);padding-bottom:6px}
+.turnlog code{font-size:10.5px;color:var(--muted)}
+.turnlog .dmg{font:700 12px var(--mono);color:var(--bad)}
+.win{font:800 30px/1 var(--display);letter-spacing:-.01em}
+.reward{border-radius:14px;background:var(--accent-soft);padding:12px;display:grid;gap:4px}
+.reward .lbl{color:var(--accent-ink)}
+
+/* C# */
+.memgrid{display:grid;grid-template-columns:1fr 1.25fr;gap:8px}
+.memcol{display:grid;gap:6px;align-content:start}
+.ref{color:var(--info);font-weight:600}
+
+/* ---------- plan sections ---------- */
+.recipe{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px}
+.rc{border-radius:12px;padding:18px;display:grid;gap:8px;align-content:start;border:1.5px solid}
+.rc.pg{background:var(--info-soft);border-color:var(--info)}
+.rc.ov{background:var(--accent-soft);border-color:var(--accent)}
+.rc.rg{background:var(--ok-soft);border-color:var(--ok)}
+.rc .lbl{color:var(--ink)}
+.rc h3{font-size:22px}
+.rc code{font-size:12.5px;background:var(--surface);border-radius:6px;padding:8px 10px;display:block;overflow-x:auto;white-space:pre}
+.note{font-size:14px;color:var(--muted);margin-bottom:28px;max-width:80ch}
+.paths{display:grid;gap:10px;margin-bottom:28px}
+.path{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:13.5px}
+.path b{font-family:var(--display);font-size:15px;min-width:120px}
+.path span{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:2px 10px}
+.path span.hot{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-ink);font-weight:600}
+.path i{font-style:normal;color:var(--muted)}
+.path small{color:var(--muted);font:12px var(--mono);margin-left:6px}
+section.plan{padding-block:72px 8px}
+.sec-h{display:grid;grid-template-columns:220px 1fr;gap:32px;margin-bottom:28px;align-items:start}
+.sec-h h2{font-size:30px;font-weight:700}
+.sec-h p{color:var(--muted);max-width:64ch}
+.decisions{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.dec{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px;display:grid;gap:8px;align-content:start}
+.dec h3{font-size:18px}
+.dec p{font-size:14px;color:var(--muted)}
+.dec .vs{font:500 12px var(--mono);color:var(--accent-ink)}
+.principles{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.pr{background:var(--surface);padding:20px;display:grid;gap:8px;align-content:start}
+.pr h3{font-size:18px;font-weight:700}
+.pr p{font-size:14px;color:var(--muted)}
+.pr .where{font:500 11.5px var(--mono);color:var(--accent-ink)}
+.cycle{display:grid;grid-template-columns:repeat(7,1fr);counter-reset:st;border-top:2px solid var(--ink);padding:0;margin:0}
+.cycle li{list-style:none;padding:14px 12px 0 0;display:grid;gap:6px;align-content:start;position:relative}
+.cycle li::before{counter-increment:st;content:counter(st);font:700 12px var(--mono);width:24px;height:24px;display:grid;place-items:center;border-radius:50%;background:var(--ink);color:var(--bg);margin-top:-27px}
+.cycle li.hot::before{background:var(--accent);color:#1b1500}
+.cycle b{font:700 15px var(--display)}
+.cycle span{font-size:13px;color:var(--muted)}
+.cycle em{font-style:normal;font:500 11.5px var(--mono);color:var(--accent-ink)}
+.curr{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.trk{border-top:3px solid var(--ink);padding-top:12px;display:grid;gap:10px;align-content:start}
+.trk h3{font-size:19px}
+.trk .hrs{font:500 12px var(--mono);color:var(--muted)}
+.trk ul{margin:0;padding:0;list-style:none;display:grid;gap:6px;font-size:13.5px}
+.trk li{display:grid;grid-template-columns:30px 1fr;gap:4px}
+.trk li code{font-size:11.5px;color:var(--muted);padding-top:2px}
+.trk .proj-tag{font-size:12.5px;background:var(--accent-soft);color:var(--accent-ink);border-radius:6px;padding:8px 10px}
+.trk.hot{border-top-color:var(--accent)}
+.trk.hot h3::after{content:"foco";font:600 10.5px var(--mono);text-transform:uppercase;letter-spacing:.06em;background:var(--accent);color:#1b1500;border-radius:4px;padding:2px 6px;margin-left:8px;vertical-align:middle}
+.trk.span2{grid-column:span 2}
+.trk.span2 ul{grid-template-columns:1fr 1fr;column-gap:20px}
+.trk .grp{font:600 11px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);grid-column:1/-1;margin-top:6px;display:block}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:720px;font-size:14px}
+th,td{text-align:left;padding:12px 16px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:600 11.5px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--surface-2)}
+tr:last-child td{border-bottom:0}
+td:first-child{font-weight:600;white-space:nowrap}
+td.why{color:var(--muted);font-size:13px}
+.phases{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+.ph{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;display:grid;gap:10px;align-content:start}
+.ph.now{border-color:var(--ink);box-shadow:inset 0 3px 0 var(--accent)}
+.ph .when{font:600 12px var(--mono);color:var(--muted)}
+.ph h3{font-size:19px}
+.ph ul{margin:0;padding-left:18px;font-size:13.5px;display:grid;gap:4px}
+.ph .exit{font-size:12.5px;border-top:1px dashed var(--line);padding-top:8px;color:var(--muted)}
+.ph .exit b{color:var(--ink)}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.mt{padding:16px 0;border-top:1px solid var(--line);display:grid;gap:6px;align-content:start}
+.mt b{font:800 30px var(--display);font-variant-numeric:tabular-nums}
+.mt span{font-size:13.5px;color:var(--muted)}
+.anti{margin-top:28px;display:grid;grid-template-columns:repeat(2,1fr);gap:10px 32px;font-size:14px}
+.anti div{display:grid;grid-template-columns:auto 1fr;gap:10px}
+.anti s{color:var(--muted)}
+footer{padding-block:56px 40px;color:var(--muted);font-size:13px}
+
+@media (max-width:900px){
+  .hero,.sec-h{grid-template-columns:1fr;gap:20px}
+  .principles,.decisions{grid-template-columns:1fr 1fr}
+  .cycle{grid-template-columns:1fr;border-top:0;border-left:2px solid var(--ink)}
+  .cycle li{padding:0 0 16px 22px}
+  .cycle li::before{position:absolute;left:-13px;top:0;margin:0}
+  .curr,.phases,.metrics{grid-template-columns:1fr 1fr}
+  .anti,.recipe{grid-template-columns:1fr}
+  .rules{grid-template-columns:1fr 1fr}
+}
+@media (max-width:560px){
+  .principles,.curr,.phases,.metrics,.decisions{grid-template-columns:1fr}
+  .trk.span2{grid-column:auto}
+  .rules{grid-template-columns:1fr}
+  .trk.span2 ul{grid-template-columns:1fr}
+  .top nav{display:none}
+  .board{height:78vh}
+}
+@media (prefers-reduced-motion:reduce){.caret{animation:none}}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-hoje" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/></symbol>
+    <symbol id="i-mapa" viewBox="0 0 24 24"><circle cx="6" cy="6" r="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="18" cy="12" r="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="6" cy="18" r="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8.3 7.2l7.4 3.6M8.3 16.8l7.4-3.6" stroke="currentColor" stroke-width="1.8" fill="none"/></symbol>
+    <symbol id="i-pratica" viewBox="0 0 24 24"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5M13.5 4.5l-3 15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/></symbol>
+    <symbol id="i-proj" viewBox="0 0 24 24"><path d="M3 7.5A1.5 1.5 0 0 1 4.5 6h5l2 2h8A1.5 1.5 0 0 1 21 9.5v8a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 17.5z" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linejoin="round"/></symbol>
+    <symbol id="i-perfil" viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="3.8" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M4.5 20c1.3-3.6 4.2-5.5 7.5-5.5s6.2 1.9 7.5 5.5" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round"/></symbol>
+  </defs>
+</svg>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">Sintaxe<span class="caret" aria-hidden="true"></span></div>
+    <nav aria-label="Seções">
+      <a href="#telas">Telas</a><a href="#zero">Nível zero</a><a href="#foco">JS no HTML</a><a href="#arena">Arena</a><a href="#mobile">Mobile</a><a href="#pedagogia">Pedagogia</a><a href="#curriculo">Currículo</a><a href="#tecnica">Técnica</a><a href="#roadmap">Roadmap</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div>
+      <div class="eyebrow">Plano de produto · app iOS e Android</div>
+      <h1>Lógica, web e C# no celular, <mark>em sessões de 10 minutos</mark> que ensinam de verdade.</h1>
+      <p class="lede">Sintaxe é um app de bolso para aprender a programar prevendo, consertando e escrevendo código que roda de verdade. Começa pela lógica de programação e segue por dois caminhos: web (HTML, CSS e JavaScript) e back-end com C#. O foco principal é o ponto em que mais gente trava: <b>fazer o JavaScript funcionar dentro do HTML</b>.</p>
+    </div>
+    <div class="thesis">
+      <b>O que "ensinar de verdade" significa aqui</b>
+      <dl>
+        <dt>começar</dt><dd>Do básico do básico, explicado como para uma criança.</dd>
+        <dt>medir</dt><dd>Domínio por habilidade, não XP nem sequência de dias.</dd>
+        <dt>lembrar</dt><dd>Revisão espaçada (FSRS) com notificação no momento certo.</dd>
+        <dt>entender</dt><dd>Ver a execução: pilha, escopos, event loop, box model.</dd>
+        <dt>transferir</dt><dd>Projetos reais, publicados direto do app.</dd>
+      </dl>
+    </div>
+  </section>
+</div>
+
+<!-- ================= CANVAS ================= -->
+<section id="telas" class="wrap" style="max-width:1480px">
+  <div class="canvas-head">
+    <div>
+      <h2>Canvas de telas</h2>
+      <p>25 telas agrupadas pelo caminho do aluno: entrar → lógica → aprender → JS na página → praticar → arena → C# → construir. Arraste para navegar ou use os atalhos.</p>
+    </div>
+    <div class="tools" role="group" aria-label="Controles do canvas">
+      <button type="button" id="z50" data-z="0.5">50%</button>
+      <button type="button" id="z75" data-z="0.75">75%</button>
+      <button type="button" id="z100" data-z="1" aria-pressed="true">100%</button>
+      <button type="button" id="notes" aria-pressed="true">Anotações</button>
+    </div>
+  </div>
+  <div class="jump" id="jump">
+    <button type="button" data-t="s1">01 Objetivo</button>
+    <button type="button" data-t="s2">02 Diagnóstico</button>
+    <button type="button" data-t="s3">03 Hoje</button>
+    <button type="button" data-t="s4">04 Mapa</button>
+    <button type="button" data-t="sZ">05 Nível zero</button>
+    <button type="button" data-t="sL1">06 Lógica em 3 línguas</button>
+    <button type="button" data-t="sL2">07 Teste de mesa</button>
+    <button type="button" data-t="s5">08 Prever</button>
+    <button type="button" data-t="s6">09 Resultado</button>
+    <button type="button" data-t="s7">10 Editor</button>
+    <button type="button" data-t="s8">11 Visualizador</button>
+    <button type="button" data-t="sJ1">12 Página ↔ código</button>
+    <button type="button" data-t="sJ2">13 Frase → código</button>
+    <button type="button" data-t="sJ3">14 Por que null?</button>
+    <button type="button" data-t="sJ4">15 Formulário</button>
+    <button type="button" data-t="s9">16 Debug</button>
+    <button type="button" data-t="s10">17 Lab CSS</button>
+    <button type="button" data-t="s11">18 Revisão</button>
+    <button type="button" data-t="sA1">19 Arena: inimigos</button>
+    <button type="button" data-t="sA2">20 Arena: turno</button>
+    <button type="button" data-t="sA3">21 Arena: vitória</button>
+    <button type="button" data-t="sC1">22 C#: compilador</button>
+    <button type="button" data-t="sC2">23 C#: objetos</button>
+    <button type="button" data-t="s12">24 Projeto</button>
+    <button type="button" data-t="s13">25 Progresso</button>
+  </div>
+
+  <div class="board" id="board" tabindex="0" aria-label="Canvas com as telas do app">
+   <div class="board-inner" id="boardInner">
+
+    <!-- ============ ENTRAR ============ -->
+    <div class="lane">
+      <div class="lane-label"><h3>Entrar</h3><span>Descobrir objetivo, tempo disponível e o que a pessoa já sabe. Em menos de 3 minutos ela está numa sessão feita para ela.</span></div>
+      <div class="lane-row">
+
+        <figure class="frame" id="s1">
+          <div class="phone"><div class="scr">
+            <div class="sbar"><span>9:41</span><span class="ic"><s></s><i></i></span></div>
+            <div class="hdr"><div class="segs" style="flex:1"><i class="d"></i><i class="c"></i><i></i></div></div>
+            <div class="body">
+              <div class="h1m">O que você quer construir?</div>
+              <div class="choice"><b>Nunca programei</b><span class="small muted">Começa pela lógica de programação</span></div>
+              <div class="choice on"><b>Sites e apps web</b><span class="small muted">HTML, CSS e JavaScript até o portfólio</span></div>
+              <div class="choice"><b>Back-end com C#</b><span class="small muted">.NET, APIs e banco de dados</span></div>
+              <div class="lbl" style="margin-top:4px">Tempo por dia</div>
+              <div class="chips"><span class="chip">5 min</span><span class="chip on">10 min</span><span class="chip">20 min</span></div>
+              <div class="row card soft"><div style="flex:1;display:grid"><b style="font-size:13px">Lembrete de revisão</b><span class="small muted">todo dia às 19:30</span></div><span class="toggle"></span></div>
+            </div>
+            <div class="cta"><span class="btn pri">Continuar</span></div>
+            <div class="homebar"></div>
+          </div></div>
+          <figcaption>
+            <span class="num">01</span><h4>Objetivo e ritmo</h4>
+            <p>O objetivo define a ordem do currículo e os projetos. O tempo diário define o tamanho de cada sessão. O horário escolhido é quando chegam as notificações de revisão.</p>
+            <ul class="tags"><li>meta explícita</li><li>sessões curtas</li><li>hábito</li></ul>
+          </figcaption>
+        </figure>
+
+        <figure class="frame" id="s2">
+          <div class="phone"><div class="scr">
+            <div class="sbar"><span>9:42</span><span class="ic"><s></s><i></i></span></div>
+            <div class="hdr"><span class="back">✕</span><div style="flex:1"><div class="bar acc"><b style="width:36%"></b></div></div><span class="mono small muted">5/14</span></div>
+            <div class="body">
+              <span class="lbl">Diagnóstico · JavaScript</span>
+              <div class="h2m">O que este código imprime?</div>
+              <pre class="code"><span class="l"><span class="k">const</span> a = [<span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>];</span><span class="l"><span class="k">const</span> b = a;</span><span class="l">b.<span class="f">push</span>(<span class="n">4</span>);</span><span class="l">console.<span class="f">log</span>(a.length);</span></pre>
+              <div class="opts"><span class="opt">3</span><span class="opt on">4</span><span class="opt" style="font-size:12px">TypeError</span><span class="opt" style="font-size:12px">undefined</span></div>
+              <span class="small muted">Quão seguro você está?</span>
+              <div class="conf"><span>Chutei</span><span>Acho que sim</span><span class="on">Certeza</span></div>
+            </div>
+            <div class="cta"><span class="btn pri">Confirmar</span><span class="link">Não sei ainda</span></div>
+            <div class="homebar"></div>
+          </div></div>
+          <figcaption>
+            <span class="num">02</span><h4>Diagnóstico adaptativo</h4>
+            <p>Entre 10 e 15 perguntas que ficam mais fáceis ou mais difíceis a cada resposta. A pessoa marca a confiança: acerto por chute não conta como domínio, e erro com "certeza" vira revisão prioritária.</p>
+            <ul class="tags"><li>adaptativo</li><li>calibração</li><li>pula o que já sabe</li></ul>
+          </figcaption>
+        </figure>
+
+        <figure class="frame" id="s3">
+          <div class="phone"><div class="scr">
+            <div class="sbar"><span>19:30</span><span class="ic"><s></s><i></i></span></div>
+            <div class="hdr"><div style="flex:1;display:grid"><span class="small muted">terça, 22 de setembro</span><span class="t" style="font-size:20px">Boa noite, Diego</span></div></div>
+            <div class="body">
+              <div class="session">
+                <span class="lbl">Sessão de hoje · 10 min</span>
+                <ol>
+                  <li><i>1</i><span>Revisar 6 cartões</span><small>4 min</small></li>
+                  <li><i>2</i><span>Eventos · lição 3</span><small>4 min</small></li>
+                  <li><i>3</i><span>Desafio: formulário</span><small>2 min</small></li>
+                </ol>
+                <span class="go">Começar</span>
+              </div>
+              <div class="lbl">Esta semana</div>
+              <div class="week"><span class="y"><b></b>S</span><span class="y"><b></b>T</span><span class="y"><b></b>Q</span><span><b></b>Q</span><span class="y"><b></b>S</span><span class="y"><b></b>S</span><span class="t"><b></b>hoje</span></div>
+              <div class="card"><span class="pill info">projeto</span><b>Cadastro com máscaras</b><span class="small muted">Checkpoint 2 de 4 · telefone só com números</span><div class="bar"><b style="width:40%"></b></div></div>
+            </div>
+            <div class="tabbar"><span class="on"><svg><use href="#i-hoje"/></svg>Hoje</span><span><svg><use href="#i-mapa"/></svg>Mapa</span><span><svg><use href="#i-pratica"/></svg>Praticar</span><span><svg><use href="#i-proj"/></svg>Projetos</span><span><svg><use href="#i-perfil"/></svg>Você</span></div>
+            <div class="homebar"></div>
+          </div></div>
+          <figcaption>
+            <span class="num">03</span><h4>Hoje</h4>
+            <p>A tela inicial é uma sessão pronta, e não um catálogo. A ordem é sempre revisão, depois conteúdo novo, depois prática intercalada. A semana mostra constância sem punir quem falta um dia.</p>
+            <ul class="tags"><li>um botão</li><li>revisão primeiro</li><li>sem culpa</li></ul>
+          </figcaption>
+        </figure>
+
+        <figure class="frame" id="s4">
+          <div class="phone"><div class="scr">
+            <div class="sbar"><span>19:31</span><span class="ic"><s></s><i></i></span></div>
+            <div class="hdr"><span class="t" style="font-size:20px">Mapa</span><span class="pill acc">6 revisar</span></div>
+            <div class="body">
+              <div class="chips" style="gap:6px;flex-wrap:nowrap"><span class="chip" style="padding:5px 11px;font-size:12px">Lógica</span><span class="chip" style="padding:5px 11px;font-size:12px">Web</span><span class="chip on" style="padding:5px 11px;font-size:12px">JS na página</span><span class="chip" style="padding:5px 11px;font-size:12px">C#</span></div>
+              <div class="tree">
+                <div class="tn d"><i>✓</i><div><b>Como o navegador lê o HTML</b><small>dominado · 96%</small></div></div>
+                <div class="tn d"><i>✓</i><div><b>Onde o script fica</b><small>dominado · 91%</small></div></div>
+                <div class="tn d"><i>✓</i><div><b>Pegar elementos</b><small>dominado · 90%</small></div></div>
+                <div class="tn r"><i>↻</i><div><b>Mudar elementos</b><small>revisar · caiu para 72%</small></div></div>
+                <div class="tn c"><i>5</i><div><b>Eventos: pegar, ouvir, reagir</b><small>lição 3 de 5</small></div></div>
+                <div class="tn l"><i>6</i><div><b>Ler o que foi digitado</b><small>precisa de Eventos</small></div></div>
+                <div class="tn l"><i>7</i><div><b>Formulários com JS</b><small>bloqueado</small></div></div>
+              </div>
+            </div>
+            <div class="tabbar"><span><svg><use href="#i-hoje"/></svg>Hoje</span><span class="on"><svg><use href="#i-mapa"/></svg>Mapa</span><span><svg><use href="#i-pratica"/></svg>Praticar</span><span><svg><use href="#i-proj"/></svg>Projetos</span><span><svg><use href="#i-perfil"/></svg>Você</span></div>
+            <div class="homebar"></div>
+          </div></div>
+          <figcaption>
+            <span class="num">04</span><h4>Mapa de habilidades</h4>
+            <p>Uma trilha vertical para cada área: Lógica, Web, JS na página e C#. Cada nó mostra o domínio atual, que cai com o tempo sem revisão, e só abre quando os pré-requisitos estão dominados. Lógica é pré-requisito tanto de JavaScript quanto de C#.</p>
+            <ul class="tags"><li>mastery learning</li><li>domínio decai</li><li>4 trilhas</li></ul>
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <!-- ============ LÓGICA ============ -->
+    <div class="lane">
+      <div class="lane-label"><h3>Lógica de programação</h3><span>A base das duas trilhas. Começa no nível zero, explicada como para uma criança. Depois o algoritmo é escrito em português e aparece em JavaScript e em C#, e o aluno executa à mão antes de o computador executar.</span></div>
+      <div class="lane-row">
+
+        <figure class="frame" id="sZ">
+          <div class="phone"><div class="scr">
+            <div class="sbar"><span>18:02</span><span class="ic"><s></s><i></i></span></div>
+            <div class="hdr"><span class="back">✕</span><div class="segs" style="flex:1"><i class="c"></i><i></i><i></i><i></i><i></i><i></i></div></div>
+            <div class="body" style="gap:14px">
+              <span class="lbl">Nível zero · passo 1 de 6</span>
+              <div class="h1m">Uma caixa com etiqueta</div>
+              <p class="big">O computador guarda coisas em <b>caixas</b>. Cada caixa tem um <b>nome</b> escrito na etiqueta.</p>
+              <div class="caixa-wrap"><div class="caixa">7<span class="etq">idade</span></div></div>
+              <p class="big">A caixa <b>idade</b> guarda o 7. Agora você fez aniversário! Arraste o <b>8</b> para dentro da caixa.</p>
+              <div class="drag"><span class="tok lift">8</span><span class="tok">3</span><span class="tok txt">"Ana"</span></div>
+            </div>
+            <div class="cta"><span class="btn dis">Coloque o 8 na caixa</span></div>
+            <div class="homebar"></div>
+          </div></div>
+          <figcaption>
+            <span class="num">05</span><h4>Nível zero: como para uma criança</h4>
+            <p>A primeira lição de toda trilha não tem código nem palavras técnicas. Tem uma caixa com etiqueta e uma tarefa com o dedo. Só depois que o aluno acerta, o app revela: "isso se chama <b>variável</b>, e em código se escreve <code>idade ← 8</code>". Primeiro a ideia, depois o nome.</p>
+            <ul class="tags"><li>ideia antes do nome</li><li>objetos do dia a dia</li><li>zero jargão</li></ul>
+          </figcaption>
+        </figure>
+
+        <figure class="frame" id="sL1">
+          <div class="phone"><div class="scr">
+            <div class="sbar"><span>18:10</span><span class="ic"><s></s><i></i></span></div>
+            <div class="hdr"><span class="back">✕</span><div class="segs" style="flex:1"><i class="d"></i><i class="c"></i><i></i><i></i></div></div>
+            <div class="body">
+              <span class="lbl">Lógica · decisões</span>
+              <div class="seg3"><span class="on" style="font-family:var(--sans)">Português</span><span>JavaScript</span><span>C#</span></div>
+              <pre class="code"><span class="l"><span class="k">leia</span> idade</span><span class="l"><span class="k">se</span> idade &gt;= <span class="n">18</span> <span class="k">então</span></span><span class="l">  <span class="k">escreva</span> <span class="s">"Pode entrar"</span></span><span class="l"><span class="k">senão</span></span><span class="l hl">  <span class="k">escreva</span> <span class="s">"Proibida"</span></span><span class="l"><span class="k">fim se</span></span></pre>
+              <svg class="flow" viewBox="0 0 300 170" role="img" aria-label="Fluxograma: leia idade, decisão idade maior ou igual a 18, caminhos sim e não">
+                <rect x="100" y="4" width="100" height="26" rx="6" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.5"/>
+                <text x="150" y="21" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" fill="var(--ink)">leia idade</text>
+                <path d="M150 30 V44" stroke="var(--ink)" stroke-width="1.5" fill="none"/>
+                <polygon points="150,44 212,66 150,88 88,66" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.5"/>
+                <text x="150" y="70" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10.5" fill="var(--ink)">idade &gt;= 18?</text>
+                <path d="M88 66 H50 V110" stroke="var(--muted)" stroke-width="1.5" fill="none"/>
+                <path d="M212 66 H250 V110" stroke="var(--accent)" stroke-width="3" fill="none"/>
+                <text x="64" y="60" font-family="JetBrains Mono, monospace" font-size="10" fill="var(--muted)">sim</text>
+                <text x="222" y="60" font-family="JetBrains Mono, monospace" font-size="10" fill="var(--accent-ink)">não</text>
+                <rect x="4" y="110" width="92" height="28" rx="6" fill="var(--surface)" stroke="var(--muted)" stroke-width="1.5"/>
+                <text x="50" y="128" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10.5" fill="var(--muted)">Pode entrar</text>
+                <rect x="204" y="110" width="92" height="28" rx="6" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="2.5"/>
+                <text x="250" y="128" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10.5" fill="var(--ink)">Proibida</text>
+                <text x="150" y="162" text-anchor="middle" font-family="IBM Plex Sans, sans-serif" font-size="11" fill="var(--muted)">testando com idade = 17</text>
+              </svg>
+            </div>
+            <div class="cta"><div class="row"><span class="btn sm" style="flex:1">idade = 17</span><span class="btn acc sm" style="flex:1">▶ Executar</span></div></div>
+            <div class="homebar"></div>
+          </div></div>
+          <figcaption>
+            <span class="num">06</span><h4>Um algoritmo, três línguas</h4>
+            <p>O aluno pensa em português (pseudocódigo) e vê o fluxograma se acender pelo caminho percorrido. Com um toque, o mesmo algoritmo aparece em JavaScript ou em C#, com as partes equivalentes alinhadas. Assim ele percebe que a lógica é a mesma e só a sintaxe muda.</p>
+            <ul class="tags"><li>pseudocódigo</li><li>fluxograma vivo</li><li>JS ↔ C#</li></ul>
+          </figcaption>
+        </figure>
+
+        <figure class="frame" id="sL2">
+          <div class="phone"><div class="scr">
+            <div class="sbar"><span>18:14</span><span class="ic"><s></s><i></i></span></div>
+            <div class="hdr"><span class="back">✕</span><span class="t">Teste de mesa</span><span class="pill">repetição</span></div>
+            <div class="body">
+              <p style="font-size:13px">Execute o código <b>à mão</b>. Preencha a linha destacada.</p>
+              <pre class="code"><span class="l">soma &lt;- <span class="n">0</span></span><span class="l hl"><span class="k">para</span> i <span class="k">de</span> <span class="n">1</span> <span class="k">até</span> <span class="n">4</span> <span class="k">faça</span></span><span class="l">  soma &lt;- soma + i</span><span class="l"><span class="k">fim para</span></span><span class="l"><span class="k">escreva</span> soma</span></pre>
+              <div class="tt">
+                <span class="th">volta</span><span class="th">i</span><span class="th">soma</span><span class="th">saída</span>
+                <span>início</span><span>—</span><span>0</span><span></span>
+                <span>1</span><span>1</span><span>1</span><span></span>
+                <span>2</span><span>2</span><span>3</span><span></span>
+                <span>3</span><span>3</span><span>6</span><span></span>
+                <span class="now">4</span><span class="now">4</span><span class="now"><b class="gap">10</b></span><span class="now"></span>
+                <span class="last">fim</span><span class="last"></span><span class="last"></span><span class="last gap" style="border-bottom:2px dashed var(--accent-ink)">?</span>
+              </div>
+              <div class="numpad" style="grid-template-columns:repeat(5,1fr)"><span>7</span><span>8</span><span>9</span><span>10</span><span>⌫</span></div>
+            </div>
+            <div class="cta"><span class="btn pri">Conferir linha</span></div>
+            <div class="homebar"></div>
+          </div></div>
+          <figcaption>
+            <span class="num">07</span><h4>Teste de mesa</h4>
+            <p>É a técnica clássica de lógica: executar o código linha a linha numa tabela, anotando o valor de cada variável. O app confere cada linha na hora e, quando há erro, mostra em qual volta o raciocínio se perdeu. A mesma tabela aparece depois em JS e em C#.</p>
+            <ul class="tags"><li>execução à mão</li><li>variáveis visíveis</li><li>erro localizado</li></ul>
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <!-- ============ APRENDER ============ -->
+    <div class="lane">
+      <div class="lane-label"><h3>Aprender</h3><span>Ideia curta, previsão antes de executar, feedback sobre o engano específico e depois a pessoa escreve com um teclado próprio para código.</span></div>
+      <div class="lane-row">
+
+        <figure class="frame" id="s5">
+          <div class="phone"><div class="scr">
+            <div class="sbar"><span>19:34</span><span class="ic"><s></s><i></i></span></div>
+            <div class="hdr"><span class="back">✕</span><div class="segs" style="flex:1"><i class="d"></i><i class="d"></i><i class="c"></i><i></i><i></i></div></div>
+            <div class="body">
+              <span class="lbl">Closures · prever</span>
+              <p style="font-size:13px">A função lembra as variáveis do lugar onde foi <b>criada</b>. Cada chamada a <code>contador()</code> cria um <code>total</code> novo.</p>
+              <pre class="code"><span class="l"><span class="k">function</span> <span class="f">contador</span>() {</span><span class="l">  <span class="k">let</span> total = <span class="n">0</span>;</span><span class="l">  <span class="k">return</span> () =&gt; ++total;</span><span class="l">}</span><span class="l"><span class="k">const</span> c1 = <span class="f">contador</span>();</span><span class="l"><span class="k">const</span> c2 = <span class="f">contador</span>();</span><span class="l"><span class="f">c1</span>(); <span class="f">c1</span>();</span><span class="l hl">console.<span class="f">log</span>(<span class="f">c2</span>());</span></pre>
+              <div class="pred">
+                <span class="lbl">Antes de executar: o que a linha 8 imprime?</span>
+                <div class="numpad"><span>0</span><span>1</span><span>2</span><span class="on">3</span></div>
+              </div>
+            </div>
+            <div class="cta"><span class="btn acc">▶ Executar</span></div>
+            <div class="homebar"></div>
+          </div></div>
+          <figcaption>
+            <span class="num">08</span><h4>Lição: prever antes de executar</h4>
+            <p>Uma ideia curta, um trecho de código e uma aposta com um toque. O botão Executar só libera depois da previsão. É aqui que o modelo mental errado aparece.</p>
+            <ul class="tags"><li>previsão obrigatória</li><li>um toque</li><li>≤ 8 linhas</li></ul>
+          </figcaption>
+        </figure>
+
+        <figure class="frame" id="s6">
+          <div class="phone"><div class="scr">
+            <div class="sbar"><span>19:34</span><span class="ic"><s></s><i></i></span></div>
+            <div class="hdr"><span class="back">✕</span><div class="segs" style="flex:1"><i class="d"></i><i class="d"></i><i class="c"></i><i></i><i></i></div></div>
+            <div class="body">
+              <pre class="code"><span class="l dim"><span class="k">function</span> <span class="f">contador</span>() {</span><span class="l dim">  <span class="k">let</span> total = <span class="n">0</span>;</span><span class="l dim">  <span class="k">return</span> () =&gt; ++total;</span><span class="l dim">}</span><span class="l dim"><span class="k">const</span> c1 = <span class="f">contador</span>();</span><span class="l dim"><span class="k">const</span> c2 = <span class="f">contador</span>();</span><span class="l dim"><span class="f">c1</span>(); <span class="f">c1</span>();</span><span class="l hl">console.<span class="f">log</span>(<span class="f">c2</span>());</span></pre>
+            </div>
+            <div class="scrim"></div>
+            <div class="sheet">
+              <div class="compare">
+                <div style="background:var(--surface-2)"><span class="lbl">Você previu</span><b>3</b></div>
+                <div style="background:var(--info-soft)"><span class="lbl" style="color:var(--info)">Saiu</span><b style="color:var(--info)">1</b></div>
+              </div>
+              <div class="h2m">c1 e c2 não dividem o mesmo total</div>
+              <p class="small" style="font-size:12.5px">Esse é o engano mais comum aqui. Cada chamada a <code>contador()</code> cria uma caixa nova com seu próprio <code>total</code>. As duas chamadas de <code>c1</code> mexem só na caixa dele.</p>
+              <span class="btn sm" style="height:42px">Ver passo a passo na memória</span>
+              <span class="btn pri">Continuar</span>
+              <div class="homebar"></div>
+            </div>
+          </div></div>
+          <figcaption>
+            <span class="num">09</span><h4>Resultado com feedback do engano</h4>
+            <p>Cada resposta errada prevista no conteúdo tem uma explicação própria: aqui, "achou que o estado era compartilhado". O atalho leva ao visualizador com o mesmo código.</p>
+            <ul class="tags"><li>feedback por equívoco</li><li>bottom sheet</li></ul>
+          </figcaption>
+        </figure>
+
+        <figure class="frame" id="s7">
+          <div class="phone"><div class="scr">
+            <div class="sbar"><span>19:37</span><span class="ic"><s></s><i></i></span></div>
+            <div class="hdr"><span class="back">✕</span><span class="t" style="font-size:13px">Faça c2 começar em 10</span><span class="pill bad">1/3</span></div>
+            <div class="body" style="gap:8px;padding-bottom:8px">
+              <div class="etabs"><span class="on">Código</span><span>Console</span><span>Testes</span></div>
+              <pre class="code"><span class="l"><span class="k">function</span> <span class="f">contador</span>(<span class="a">inicio</span>) {</span><span class="l hl">  <span class="k">let</span> total = inicio<span class="cur"></span></span><span class="l">  <span class="k">return</span> () =&gt; ++total;</span><span class="l">}</span><span class="l"><span class="k">const</span> c2 = <span class="f">contador</span>(<span class="n">10</span>);</span></pre>
+              <div class="row"><span class="btn acc sm" style="flex:1">▶ Executar</span><span class="btn sm">Dica</span></div>
+            </div>
+            <div class="kbd">
+              <div class="sugg"><span class="hot">;</span><span>?? 0</span><span>inicio</span><span>total</span><span>return</span></div>
+              <div class="krow c10"><span>(</span><span>)</span><span>{</span><span>}</span><span>[</span><span>]</span><span>=</span><span>=&gt;</span><span>.</span><span>;</span></div>
+              <div class="krow c10"><span>'</span><span>"</span><span>`</span><span>+</span><span>-</span><span>*</span><span>&lt;</span><span>&gt;</span><span>!</span><span>,</span></div>
+              <div class="krow last"><span class="m">ABC</span><span class="m">←</span><span class="m">→</span><span class="m">espaço</span><span class="m">⇥</span><span class="m">↵</span></div>
+              <div class="homebar"></div>
+            </div>
+          </div></div>
+          <figcaption>
+            <span class="num">10</span><h4>Editor com teclado de código</h4>
+            <p>Os símbolos que o teclado do celular esconde ficam a um toque. A linha de sugestões completa nomes do escopo atual, e as setas movem o cursor com precisão. "ABC" alterna para o teclado do sistema.</p>
+            <ul class="tags"><li>teclado próprio</li><li>autocompletar do escopo</li><li>testes ao vivo</li></ul>
+          </figcaption>
+        </figure>
+
+        <figure class="frame" id="s8">
+          <div class="phone"><div class="scr">
+            <div class="sbar"><span>19:36</span><span class="ic"><s></s><i></i></span></div>
+            <div class="hdr"><span class="back">‹</span><span class="t">Passo a passo</span><span class="pill">Memória</span></div>
+            <div class="body" style="gap:10px">
+              <pre class="code"><span class="l"><span class="k">function</span> <span class="f">contador</span>() {</span><span class="l">  <span class="k">let</span> total = <span class="n">0</span>;</span><span class="l hl">  <span class="k">return</span> () =&gt; ++total;</span><span class="l">}</span><span class="l dim">…</span><span class="l"><span class="f">c1</span>(); <span class="f">c1</span>();</span></pre>
+              <span class="lbl">Pilha de chamadas</span>
+              <div class="fbox top"><span class="h">função de c1 · linha 3</span></div>
+              <div class="fbox"><span class="h">global · linha 7</span></div>
+              <span class="lbl">Caixas de memória</span>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+                <div class="fbox top"><span class="h">caixa de c1</span>total: <span class="chg">2</span></div>
+                <div class="fbox"><span class="h">caixa de c2</span>total: 0</div>
+              </div>
+              <span class="small muted">▲ destaque: valor que mudou neste passo</span>
+            </div>
+            <div class="cta" style="gap:10px">
+              <div class="scrub"><b></b></div>
+              <div class="stepctl"><span class="rb">◀</span><span class="small muted" style="text-align:center">passo 9 de 18 · arraste para voltar</span><span class="rb pri">▶</span></div>
+            </div>
+            <div class="homebar"></div>
+          </div></div>
+          <figcaption>
+            <span class="num">11</span><h4>Visualizador de execução</h4>
+            <p>Botões grandes para avançar e voltar, e uma barra para arrastar no tempo. Mostra pilha e escopos. Na trilha assíncrona ganha as filas de tarefas e o event loop. Qualquer código do app abre aqui.</p>
+            <ul class="tags"><li>modelo mental</li><li>volta no tempo</li><li>feito para o polegar</li></ul>
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <!-- ============ JS NA PÁGINA ============ -->
+    <div class="lane">
+      <div class="lane-label"><h3>JS na página</h3><span class="pill acc" style="font-size:11px">foco principal</span><span>Onde mais gente trava: ligar o JavaScript ao HTML. A receita é sempre a mesma, com uma cor para cada parte: <b style="color:var(--info)">pegar</b> o elemento, <b style="color:var(--accent-ink)">ouvir</b> um evento, <b style="color:var(--ok)">reagir</b>.</span></div>
+      <div class="lane-row">
+
+        <figure class="frame" id="sJ1">
+          <div class="phone"><div class="scr">
+            <div class="sbar"><span>19:32</span><span class="ic"><s></s><i></i></span></div>
+            <div class="hdr"><span class="back">✕</span><span class="t">Toque num elemento</span><span class="pill info">pegar</span></div>
+            <div class="body">
+              <div class="pv">
+                <span class="lbl">Página</span>
+                <span class="h5">Minha página</span>
+                <span class="inp">Seu nome</span>
+                <span class="b picked" data-tag="button#botao">Dizer oi</span>
+              </div>
+              <pre class="code"><span class="l dim"><span class="t">&lt;h1&gt;</span>Minha página<span class="t">&lt;/h1&gt;</span></span><span class="l dim"><span class="t">&lt;input</span> <span class="a">id</span>=<span class="s">"nome"</span><span class="t">&gt;</span></span><span class="l hl"><span class="t">&lt;button</span> <span class="a">id</span>=<span class="s">"botao"</span><span class="t">&gt;</span>Dizer oi<span class="t">&lt;/button&gt;</span></span></pre>
+              <span class="lbl">No JavaScript, esse botão é:</span>
+              <pre class="code"><span class="l"><span class="k">const</span> botao =</span><span class="l u-pg">  document.<span class="f">querySelector</span>(<span class="s">'#botao'</span>);</span></pre>
+              <div class="objp">
+                <div><span class="pn">botao.textContent</span><span>"Dizer oi"</span></div>
+                <div><span class="pn">botao.id</span><span>"botao"</span></div>
+                <div><span class="pn">botao.disabled</span><span>false</span></div>
+              </div>
+            </div>
+            <div class="cta"><span class="btn pri">Usar no meu código</span></div>
+            <div class="homebar"></div>
+          </div></div>
+          <figcaption>
+            <span class="num">12</span><h4>Página ↔ código</h4>
+            <p>O aluno toca em qualquer coisa da página e vê três coisas ligadas: o elemento na tela, a tag no HTML e o objeto no JavaScript, com a linha exata para pegá-lo e as propriedades que ele tem. Fica claro que o <code>id</code> é a etiqueta que o JS usa para achar o elemento.</p>
+            <ul class="tags"><li>HTML → DOM → JS</li><li>modo inspeção</li><li>id como etiqueta</li></ul>
+          </figcaption>
+        </figure>
+
+        <figure class="frame" id="sJ2">
+          <div class="phone"><div class="scr">
+            <div class="sbar"><span>19:35</span><span class="ic"><s></s><i></i></span></div>
+            <div class="hdr"><span class="back">✕</span><span class="t">Monte a frase</span><span class="pill">nível 1</span></div>
+            <div class="body">
+              <div class="sent">
+                <span>Quando</span><span class="bk ov">clicar</span><span>no</span><span class="bk pg">#btn</span><span>, faça:</span>
+                <span class="bk rg">mudar o texto</span><span>de</span><span class="bk pg">#msg</span><span>para</span><span class="bk rg">"Você clicou!"</span>
+              </div>
+              <span class="lbl">O código que a frase gera</span>
+              <pre class="code"><span class="l"><span class="k">const</span> btn =</span><span class="l">  <span class="u-pg">document.<span class="f">querySelector</span>(<span class="s">'#btn'</span>)</span>;</span><span class="l"><span class="k">const</span> msg =</span><span class="l">  <span class="u-pg">document.<span class="f">querySelector</span>(<span class="s">'#msg'</span>)</span>;</span><span class="l"><span class="u-ov">btn.<span class="f">addEventListener</span>(<span class="s">'click'</span></span>, () =&gt; {</span><span class="l">  <span class="u-rg">msg.textContent = <span class="s">'Você clicou!'</span></span>;</span><span class="l">});</span></pre>
+              <div class="pv" style="padding:10px 12px"><div class="row"><span class="b">Clique</span><span class="out">Você clicou!</span></div></div>
+              <div class="lvls"><span class="on">1 · montar</span><span>2 · completar</span><span>3 · escrever</span></div>
+            </div>
+            <div class="cta"><span class="btn acc">▶ Testar na página</span></div>
+            <div class="homebar"></div>
+          </div></div>
+          <figcaption>
+            <span class="num">13</span><h4>Frase → código</h4>
+            <p>Antes de escrever, o aluno monta em português: "Quando <i>[evento]</i> no <i>[elemento]</i>, faça <i>[ação]</i>". Cada bloco acende a parte do código que ele gera, com a mesma cor. No nível 2, ele completa lacunas no código. No nível 3, escreve do zero, e a frase vira só uma dica.</p>
+            <ul class="tags"><li>quando · no · faça</li><li>cores consistentes</li><li>montar → escrever</li></ul>
+          </figcaption>
+        </figure>
+
+        <figure class="frame" id="sJ3">
+          <div class="phone"><div class="scr">
+            <div class="sbar"><span>19:39</span><span class="ic"><s></s><i></i></span></div>
+            <div class="hdr"><span class="back">‹</span><span class="t">Por que deu null?</span></div>
+            <div class="body">
+              <div class="errc">
+                <code>TypeError: Cannot read properties of null (reading 'addEventListener')</code>
+                <span class="small"><b>Tradução:</b> o JS procurou o <code>#botao</code> e não achou nada, porque ele ainda não existia.</span>
+              </div>
+              <span class="lbl">O navegador lê de cima para baixo ↓</span>
+              <div class="readlist">
+                <div><i class="mk"></i><pre>&lt;html&gt;</pre></div>
+                <div><i class="mk"></i><pre>&lt;head&gt;</pre></div>
+                <div class="run"><i class="mk"></i><div><pre>  &lt;script src="app.js"&gt;</pre><small>1º · o JS roda aqui e procura #botao → null</small></div></div>
+                <div><i class="mk"></i><pre>&lt;/head&gt;</pre></div>
+                <div><i class="mk"></i><pre>&lt;body&gt;</pre></div>
+                <div class="born"><i class="mk"></i><div><pre>  &lt;button id="botao"&gt;</pre><small>2º · só agora o botão passa a existir</small></div></div>
+                <div><i class="mk"></i><pre>&lt;/body&gt;</pre></div>
+              </div>
+            </div>
+            <div class="cta"><span class="btn pri">Mover o script para o fim do body</span><span class="link">Ou usar &lt;script defer&gt;</span></div>
+            <div class="homebar"></div>
+          </div></div>
+          <figcaption>
+            <span class="num">14</span><h4>Erros explicados como filme</h4>
+            <p>Os erros clássicos de quem liga JS ao HTML ganham uma explicação visual. Aqui, o app mostra a ordem em que o navegador leu o arquivo: o script rodou antes de o botão existir. Um toque aplica a correção e roda de novo. Outros erros com explicação própria: chamar a função no listener, usar <code>value</code> como número e esquecer <code>preventDefault</code>.</p>
+            <ul class="tags"><li>ordem de leitura</li><li>erro traduzido</li><li>corrigir com um toque</li></ul>
+          </figcaption>
+        </figure>
+
+        <figure class="frame" id="sJ4">
+          <div class="phone"><div class="scr">
+            <div class="sbar"><span>19:44</span><span class="ic"><s></s><i></i></span></div>
+            <div class="hdr"><span class="back">✕</span><span class="t" style="font-size:13.5px">Idade: só números</span><span class="pill bad">1/3</span></div>
+            <div class="body" style="gap:10px">
+              <div class="pv" style="padding:10px 12px">
+                <span class="lbl">Teste automático digitando "25a"</span>
+                <span class="inp typed">25a</span>
+              </div>
+              <pre class="code"><span class="l"><span class="k">const</span> idade =</span><span class="l">  document.<span class="f">querySelector</span>(<span class="s">'#idade'</span>);</span><span class="l err">idade.<span class="f">addEventListener</span>(<span class="s">'keydown'</span>, () =&gt; {</span><span class="l">  idade.value =</span><span class="l">    idade.value.<span class="f">replace</span>(<span class="n">/\D/g</span>, <span class="s">''</span>);</span><span class="l">});</span></pre>
+              <div class="tests" style="display:grid;gap:5px;font-size:12px">
+                <div class="row" style="gap:8px;align-items:flex-start"><b style="color:var(--ok)">✓</b><span>digitar "25" mostra 25</span></div>
+                <div class="row" style="gap:8px;align-items:flex-start"><b style="color:var(--bad)">✗</b><span>digitar "25a" deveria mostrar 25</span></div>
+                <div class="row" style="gap:8px;align-items:flex-start"><b style="color:var(--bad)">✗</b><span>colar "abc" deveria deixar vazio</span></div>
+              </div>
+              <div class="card soft"><span class="small"><b>Dica:</b> <code>keydown</code> dispara <i>antes</i> de a letra entrar no campo, e colar não é tecla. Qual evento dispara depois de <i>qualquer</i> mudança?</span></div>
+            </div>
+            <div class="cta"><span class="btn acc">▶ Rodar testes</span></div>
+            <div class="homebar"></div>
+          </div></div>
+          <figcaption>
+            <span class="num">15</span><h4>Desafios de formulário</h4>
+            <p>Os casos que mais aparecem no dia a dia: só números, máscara de telefone e CPF, contador de caracteres, confirmar senha, habilitar o botão só quando tudo estiver válido. Os testes simulam digitar, colar e usar o teclado do celular. O módulo separa três trabalhos: <b>validar</b> (HTML), <b>bloquear</b> e <b>formatar</b> (JS).</p>
+            <ul class="tags"><li>validar × bloquear × formatar</li><li>testes que digitam</li><li>casos reais</li></ul>
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <!-- ============ PRATICAR ============ -->
+    <div class="lane">
+      <div class="lane-label"><h3>Praticar</h3><span>Achar bugs, igualar layouts e recuperar da memória, em formatos pensados para toque em vez de digitação longa.</span></div>
+      <div class="lane-row">
+
+        <figure class="frame" id="s9">
+          <div class="phone"><div class="scr">
+            <div class="sbar"><span>19:40</span><span class="ic"><s></s><i></i></span></div>
+            <div class="hdr"><span class="back">✕</span><span class="t">Caça ao bug</span><span class="pill bad">2/4 testes</span></div>
+            <div class="body">
+              <p style="font-size:13px"><b>O botão adiciona um item ao abrir a página e depois não faz mais nada.</b> Toque na linha com o bug.</p>
+              <div class="tapcode">
+                <div><span class="k">const</span> btn = <span class="f">$</span>(<span class="s">'#add'</span>);</div>
+                <div><span class="k">const</span> ul = <span class="f">$</span>(<span class="s">'#itens'</span>);</div>
+                <div><span class="k">function</span> <span class="f">add</span>() {</div>
+                <div>  ul.<span class="f">append</span>(<span class="f">novoItem</span>());</div>
+                <div>}</div>
+                <div class="sel">btn.<span class="f">addEventListener</span>(<span class="s">'click'</span>, <span class="f">add</span>());</div>
+              </div>
+              <span class="lbl">Dicas</span>
+              <div class="hintr"><span class="u">1 · conceito</span><span>2 · onde</span><span>3 · correção</span></div>
+              <div class="card soft"><span class="small">O segundo argumento precisa ser uma função a ser chamada <i>depois</i>, no clique. O que <code>add()</code> entrega agora?</span></div>
+            </div>
+            <div class="cta"><span class="btn pri">Corrigir esta linha</span></div>
+            <div class="homebar"></div>
+          </div></div>
+          <figcaption>
+            <span class="num">16</span><h4>Caça ao bug</h4>
+            <p>Primeiro a pessoa aponta o bug com um toque, depois corrige só aquela linha no teclado de código. As dicas vão do conceito à resposta. Usar a última registra que o domínio ainda não veio.</p>
+            <ul class="tags"><li>erros deliberados</li><li>tocar para apontar</li><li>dicas graduais</li></ul>
+          </figcaption>
+        </figure>
+
+        <figure class="frame" id="s10">
+          <div class="phone"><div class="scr">
+            <div class="sbar"><span>19:43</span><span class="ic"><s></s><i></i></span></div>
+            <div class="hdr"><span class="back">✕</span><span class="t">Iguale o alvo</span><span class="pill acc">92%</span></div>
+            <div class="body">
+              <div class="stage">
+                <div class="seg3" style="grid-template-columns:repeat(3,1fr)"><span>Alvo</span><span class="on">Sobrepor</span><span>Seu</span></div>
+                <div class="mini">
+                  <div class="r"><span class="av"></span><div style="flex:1;display:grid;gap:5px"><span class="ln" style="width:70%"></span><span class="ln" style="width:45%"></span></div></div>
+                  <div class="gridx" style="grid-template-columns:repeat(2,1fr)"><i></i><i></i><i style="outline:2px solid var(--bad);outline-offset:1px"></i></div>
+                  <div class="ghost"></div>
+                </div>
+                <span class="small muted">A 3ª foto quebrou de linha. No alvo, as três ficam lado a lado.</span>
+              </div>
+              <div class="props">
+                <div class="prop"><span><span class="pn">display:</span> grid</span><span class="muted">›</span></div>
+                <div class="prop on"><span><span class="pn">columns:</span> repeat(2, 1fr)</span><span class="stepper"><span>−</span><span>2</span><span>+</span></span></div>
+                <div class="prop"><span><span class="pn">gap:</span> 5px</span><span class="slider"><b></b></span></div>
+                <div class="prop"><span><span class="pn">padding:</span> 16px</span><span class="muted">›</span></div>
+              </div>
+            </div>
+            <div class="cta"><span class="link">Escrever o CSS à mão</span></div>
+            <div class="homebar"></div>
+          </div></div>
+          <figcaption>
+            <span class="num">17</span><h4>Lab CSS com alvo visual</h4>
+            <p>Um layout-alvo sobreposto ao resultado. Nos primeiros níveis, os valores mudam por controles de toque e a pessoa vê o efeito na hora. Nos níveis seguintes, ela escreve as declarações. A nota compara a posição e o tamanho de cada elemento.</p>
+            <ul class="tags"><li>objetivo visual</li><li>controles → código</li><li>sobreposição</li></ul>
+          </figcaption>
+        </figure>
+
+        <figure class="frame" id="s11">
+          <div class="phone"><div class="scr">
+            <div class="sbar"><span>19:30</span><span class="ic"><s></s><i></i></span></div>
+            <div class="hdr"><span class="back">✕</span><div style="flex:1"><div class="bar acc"><b style="width:50%"></b></div></div><span class="mono small muted">3/6</span></div>
+            <div class="body">
+              <span class="lbl">Revisão · async · visto há 9 dias</span>
+              <div class="h2m">Ordene as linhas para buscar os filmes e mostrar o título do primeiro.</div>
+              <div class="parsons">
+                <div class="pl"><span><span class="k">async function</span> <span class="f">buscar</span>() {</span></div>
+                <div class="pl lift"><span>  <span class="k">const</span> r = <span class="k">await</span> <span class="f">fetch</span>(url);</span></div>
+                <div class="slot"></div>
+                <div class="pl"><span>  <span class="k">const</span> d = <span class="k">await</span> r.<span class="f">json</span>();</span></div>
+                <div class="pl"><span>  h1.textContent = d[<span class="n">0</span>].titulo;</span></div>
+                <div class="pl"><span>}</span></div>
+              </div>
+              <span class="small muted">Uma das linhas é uma distração e não entra.</span>
+              <div class="rate4"><span>Errei<small>10 min</small></span><span>Difícil<small>2 d</small></span><span style="border-color:var(--ink)">Bom<small>11 d</small></span><span>Fácil<small>30 d</small></span></div>
+            </div>
+            <div class="cta"><span class="btn pri">Conferir</span></div>
+            <div class="homebar"></div>
+          </div></div>
+          <figcaption>
+            <span class="num">18</span><h4>Revisão espaçada</h4>
+            <p>Os cartões pedem para <b>produzir</b>, não para reconhecer: ordenar linhas (Parsons), completar lacunas, prever a saída, escrever uma linha. Tudo é conferido executando. O próximo intervalo vem do FSRS e vira notificação.</p>
+            <ul class="tags"><li>recuperação ativa</li><li>FSRS</li><li>intercala HTML/CSS/JS</li></ul>
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <!-- ============ ARENA ============ -->
+    <div class="lane">
+      <div class="lane-label"><h3>Arena</h3><span class="pill" style="font-size:11px">modo de prática</span><span>Luta por turno em que o golpe é o código. Serve para praticar e revisar o que já foi aprendido; as lições continuam calmas. Cada inimigo é um erro clássico e cada módulo termina com um chefão.</span></div>
+      <div class="lane-row">
+
+        <figure class="frame" id="sA1">
+          <div class="phone"><div class="scr">
+            <div class="sbar"><span>20:30</span><span class="ic"><s></s><i></i></span></div>
+            <div class="hdr"><span class="t" style="font-size:20px">Arena</span><span class="pill acc">JS na página</span></div>
+            <div class="body" style="gap:10px">
+              <p class="small muted">Vença os três inimigos para liberar o chefão do módulo.</p>
+              <div class="enemy done">
+                <span class="av" style="background:var(--surface-2)"><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M8 34 V18 a12 12 0 0 1 24 0 V34 l-4-3 -4 3 -4-3 -4 3 -4-3z" fill="var(--surface)" stroke="var(--ink)" stroke-width="2"/><circle cx="15" cy="19" r="2" fill="var(--ink)"/><circle cx="25" cy="19" r="2" fill="var(--ink)"/></svg></span>
+                <div><b>Fantasma do null</b><small>fraqueza: script no lugar certo</small></div><span class="pill ok">vencido</span>
+              </div>
+              <div class="enemy">
+                <span class="av" style="background:var(--info-soft)"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="13" cy="20" r="9" fill="var(--surface)" stroke="var(--ink)" stroke-width="2"/><circle cx="27" cy="20" r="9" fill="var(--surface)" stroke="var(--ink)" stroke-width="2"/><path d="M10 20h6M24 18h6M24 22h6" stroke="var(--ink)" stroke-width="2"/></svg></span>
+                <div><b>Gêmeos do ==</b><small>fraqueza: comparar com ===</small></div><span class="hpn">40 HP</span>
+              </div>
+              <div class="enemy">
+                <span class="av" style="background:var(--accent-soft)"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="22" r="11" fill="var(--surface)" stroke="var(--ink)" stroke-width="2"/><path d="M20 11 V4 M16 6 h8" stroke="var(--ink)" stroke-width="2"/><path d="M15 25 q5 4 10 0" fill="none" stroke="var(--ink)" stroke-width="2"/><circle cx="16" cy="20" r="1.8" fill="var(--ink)"/><circle cx="24" cy="20" r="1.8" fill="var(--ink)"/></svg></span>
+                <div><b>Apressado ( )</b><small>fraqueza: passar a função sem chamar</small></div><span class="hpn">35 HP</span>
+              </div>
+              <div class="enemy">
+                <span class="av" style="background:var(--ok-soft)"><svg viewBox="0 0 40 40" aria-hidden="true"><ellipse cx="20" cy="22" rx="9" ry="11" fill="var(--surface)" stroke="var(--ink)" stroke-width="2"/><path d="M11 17 4 13M11 23 4 23M11 29 4 33M29 17 36 13M29 23 36 23M29 29 36 33M16 11 13 5M24 11 27 5" stroke="var(--ink)" stroke-width="2" stroke-linecap="round"/><path d="M11 20 h18" stroke="var(--ink)" stroke-width="1.5"/></svg></span>
+                <div><b>Bug Blindado</b><small>fraqueza: if + for</small></div><span class="hpn">30 HP</span>
+              </div>
+              <div class="enemy boss lock">
+                <span class="av" style="background:var(--bad-soft)"><svg viewBox="0 0 40 40" aria-hidden="true"><rect x="7" y="7" width="26" height="28" rx="3" fill="var(--surface)" stroke="var(--ink)" stroke-width="2"/><path d="M11 14h18M11 20h12M11 26h18" stroke="var(--ink)" stroke-width="2"/><path d="M26 17 31 23" stroke="var(--bad)" stroke-width="2.5"/></svg></span>
+                <div><b>Chefão: Formulário Quebrado</b><small>usa tudo do módulo · 120 HP</small></div><span class="pill">1 de 3</span>
+              </div>
+            </div>
+            <div class="tabbar"><span><svg><use href="#i-hoje"/></svg>Hoje</span><span><svg><use href="#i-mapa"/></svg>Mapa</span><span class="on"><svg><use href="#i-pratica"/></svg>Praticar</span><span><svg><use href="#i-proj"/></svg>Projetos</span><span><svg><use href="#i-perfil"/></svg>Você</span></div>
+            <div class="homebar"></div>
+          </div></div>
+          <figcaption>
+            <span class="num">19</span><h4>Escolher o inimigo</h4>
+            <p>Cada módulo tem sua arena. Os inimigos são os erros clássicos daquele assunto, e a "fraqueza" de cada um é o conceito que o derrota. O chefão só abre depois dos outros e exige tudo o que o módulo ensinou.</p>
+            <ul class="tags"><li>inimigos = erros clássicos</li><li>chefão por módulo</li></ul>
+          </figcaption>
+        </figure>
+
+        <figure class="frame" id="sA2">
+          <div class="phone"><div class="scr">
+            <div class="sbar"><span>20:33</span><span class="ic"><s></s><i></i></span></div>
+            <div class="hdr"><span class="back">✕</span><span class="t">Turno 2 · sua vez</span><span class="pill">sem relógio</span></div>
+            <div class="body" style="gap:10px">
+              <div class="arena">
+                <div class="fighter">
+                  <svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="18" r="10" fill="var(--accent)" stroke="var(--ink)" stroke-width="2"/><path d="M18 58 V40 a14 14 0 0 1 28 0 V58z" fill="var(--surface)" stroke="var(--ink)" stroke-width="2"/><path d="M46 40 l10-8" stroke="var(--ink)" stroke-width="3" stroke-linecap="round"/></svg>
+                  <span class="nm">você</span>
+                  <div class="hp"><b style="width:80%"></b></div><span class="hpn">80/100</span>
+                </div>
+                <span class="vs-mark">×</span>
+                <div class="fighter">
+                  <svg viewBox="0 0 64 64" aria-hidden="true"><ellipse cx="32" cy="36" rx="14" ry="17" fill="var(--surface)" stroke="var(--ink)" stroke-width="2"/><path d="M18 28 7 22M18 37 6 37M18 46 7 52M46 28 57 22M46 37 58 37M46 46 57 52M26 20 21 10M38 20 43 10" stroke="var(--ink)" stroke-width="2.5" stroke-linecap="round"/><rect x="14" y="30" width="36" height="14" rx="4" fill="var(--info-soft)" stroke="var(--info)" stroke-width="2"/><circle cx="27" cy="26" r="2" fill="var(--ink)"/><circle cx="37" cy="26" r="2" fill="var(--ink)"/></svg>
+                  <span class="nm">Bug Blindado <span class="shield">escudo</span></span>
+                  <div class="hp en"><b style="width:100%"></b></div><span class="hpn">30/30</span>
+                </div>
+              </div>
+              <pre class="code"><span class="l"><span class="k">if</span> (inimigo.temEscudo) {</span><span class="l">  <span class="f">quebrarEscudo</span>();</span><span class="l">}</span><span class="l hl"><span class="k">for</span> (<span class="k">let</span> i = <span class="n">0</span>; i &lt; <span class="n">3</span>; i++) {</span><span class="l">  <span class="f">socar</span>(); <span class="c">// 10 de dano</span></span><span class="l">}<span class="cur"></span></span></pre>
+              <span class="lbl">Seus golpes (toque para inserir)</span>
+              <div class="hand"><span class="bk rg">socar()</span><span class="bk rg">quebrarEscudo()</span><span class="bk rg">curar()</span><span class="bk ov">if</span><span class="bk ov">for</span><span class="bk pg">inimigo.vida</span></div>
+            </div>
+            <div class="cta"><span class="btn acc">Atacar</span></div>
+            <div class="homebar"></div>
+          </div></div>
+          <figcaption>
+            <span class="num">20</span><h4>O turno: o golpe é o código</h4>
+            <p>Na sua vez, você escreve o ataque com os golpes que já aprendeu. O <code>for</code> é o golpe triplo e o <code>if</code> reage ao escudo. Se você escrever <code>i &lt; 2</code>, só saem dois socos, e a luta mostra o motivo. Na vez do inimigo, ele mostra o código do ataque dele e você <b>prevê o dano</b> para escolher a defesa.</p>
+            <ul class="tags"><li>conceito = habilidade</li><li>prever = defender</li><li>por turno, sem pressa</li></ul>
+          </figcaption>
+        </figure>
+
+        <figure class="frame" id="sA3">
+          <div class="phone"><div class="scr">
+            <div class="sbar"><span>20:34</span><span class="ic"><s></s><i></i></span></div>
+            <div class="hdr"><span class="back">✕</span><span class="t">Resultado</span></div>
+            <div class="body" style="gap:12px">
+              <div style="display:grid;gap:4px"><span class="lbl">Bug Blindado derrotado</span><span class="win">Vitória!</span></div>
+              <span class="lbl">O que o seu código fez</span>
+              <div class="turnlog">
+                <div><code>l.1</code><span><code>if</code> viu o escudo → <b>quebrou</b></span><span class="pill ok">✓</span></div>
+                <div><code>l.5</code><span>soco 1 de 3 (<code>i = 0</code>)</span><span class="dmg">−10</span></div>
+                <div><code>l.5</code><span>soco 2 de 3 (<code>i = 1</code>)</span><span class="dmg">−10</span></div>
+                <div><code>l.5</code><span>soco 3 de 3 (<code>i = 2</code>)</span><span class="dmg">−10</span></div>
+              </div>
+              <div class="card soft"><span class="lbl">Conceitos que você usou</span><div class="hand"><span class="bk ov">if</span><span class="bk ov">for</span><span class="bk rg">funções</span></div></div>
+              <div class="reward">
+                <span class="lbl">Novo golpe liberado</span>
+                <b style="font-size:14px"><code>while</code>: fúria até o inimigo cair</b>
+                <span class="small">Primeiro você aprende a lição sobre <code>while</code>. Depois ele vira golpe.</span>
+              </div>
+              <span class="small muted">Cartão de revisão sobre <code>for</code> agendado para daqui a 3 dias.</span>
+            </div>
+            <div class="cta"><span class="btn pri">Próximo inimigo</span></div>
+            <div class="homebar"></div>
+          </div></div>
+          <figcaption>
+            <span class="num">21</span><h4>Vitória que ensina</h4>
+            <p>O resultado repassa o próprio código, linha por linha: o que cada linha fez e quanto dano causou. Na derrota, a mesma tela mostra onde o raciocínio falhou e deixa tentar de novo, sem perder nada. Os golpes novos são liberados por lições, nunca comprados.</p>
+            <ul class="tags"><li>replay linha a linha</li><li>perder não pune</li><li>golpes vêm de lições</li></ul>
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <!-- ============ C# ============ -->
+    <div class="lane">
+      <div class="lane-label"><h3>C# e .NET</h3><span>Do primeiro <code>Console.WriteLine</code> até uma API com banco de dados. O mesmo método do resto do app: prever, ver a memória, entender o erro antes de corrigir.</span></div>
+      <div class="lane-row">
+
+        <figure class="frame" id="sC1">
+          <div class="phone"><div class="scr">
+            <div class="sbar"><span>21:02</span><span class="ic"><s></s><i></i></span></div>
+            <div class="hdr"><span class="back">✕</span><span class="t">C# · tipos</span><span class="pill bad">não compilou</span></div>
+            <div class="body">
+              <pre class="code"><span class="l">Console.<span class="f">Write</span>(<span class="s">"Idade: "</span>);</span><span class="l err"><span class="k">int</span> idade = Console.<span class="f">ReadLine</span>();</span><span class="l"><span class="k">if</span> (idade &gt;= <span class="n">18</span>)</span><span class="l">  Console.<span class="f">WriteLine</span>(<span class="s">"Pode entrar"</span>);</span></pre>
+              <div class="errc">
+                <code>CS0029: Cannot implicitly convert type 'string' to 'int'</code>
+                <span class="small"><b>Tradução:</b> <code>ReadLine()</code> sempre devolve <b>texto</b> (<code>string</code>), e <code>idade</code> foi declarada como <b>número</b> (<code>int</code>). Em C# os tipos precisam combinar, e o compilador avisa <i>antes</i> de rodar.</span>
+              </div>
+              <div class="card soft">
+                <span class="lbl">Compare com JavaScript</span>
+                <span class="small">Em JS isso rodaria sem reclamar, e o bug só apareceria depois (<code>"17" + 1</code> vira <code>"171"</code>).</span>
+              </div>
+              <div class="hintr"><span class="u">1 · o que é conversão</span><span>2 · int.Parse</span><span>3 · int.TryParse</span></div>
+            </div>
+            <div class="cta"><span class="btn acc">▶ Compilar e executar</span></div>
+            <div class="homebar"></div>
+          </div></div>
+          <figcaption>
+            <span class="num">22</span><h4>Compilador explicado</h4>
+            <p>Cada erro de compilação do C# (CS0029, CS0103, CS1002…) vem com uma tradução para iniciantes e dicas graduais. Quem já passou pela trilha web ganha a comparação com JavaScript, que mostra por que tipos estáticos evitam bugs.</p>
+            <ul class="tags"><li>erros traduzidos</li><li>tipos estáticos</li><li>ponte com JS</li></ul>
+          </figcaption>
+        </figure>
+
+        <figure class="frame" id="sC2">
+          <div class="phone"><div class="scr">
+            <div class="sbar"><span>21:15</span><span class="ic"><s></s><i></i></span></div>
+            <div class="hdr"><span class="back">✕</span><span class="t">Objetos na memória</span><span class="pill">prever</span></div>
+            <div class="body">
+              <pre class="code"><span class="l"><span class="k">class</span> <span class="t">Conta</span> {</span><span class="l">  <span class="k">public decimal</span> Saldo;</span><span class="l">}</span><span class="l"><span class="k">var</span> a = <span class="k">new</span> <span class="t">Conta</span> { Saldo = <span class="n">100</span> };</span><span class="l"><span class="k">var</span> b = a;</span><span class="l hl">b.Saldo -= <span class="n">30</span>;</span><span class="l">Console.<span class="f">WriteLine</span>(a.Saldo);</span></pre>
+              <div class="memgrid">
+                <div class="memcol">
+                  <span class="lbl">Variáveis</span>
+                  <div class="fbox"><span class="h">a</span><span class="ref">→ Conta #1</span></div>
+                  <div class="fbox top"><span class="h">b</span><span class="ref">→ Conta #1</span></div>
+                </div>
+                <div class="memcol">
+                  <span class="lbl">Objetos</span>
+                  <div class="fbox top"><span class="h">Conta #1</span>Saldo: <span class="chg">70</span></div>
+                  <span class="small muted">a e b apontam para o <b>mesmo</b> objeto</span>
+                </div>
+              </div>
+              <div class="pred" style="padding:10px">
+                <span class="lbl">Qual valor a última linha imprime?</span>
+                <div class="numpad"><span>100</span><span class="on">70</span><span>30</span><span style="font-size:12px">erro</span></div>
+              </div>
+            </div>
+            <div class="cta"><span class="btn sm" style="height:42px">Trocar class por struct e comparar</span></div>
+            <div class="homebar"></div>
+          </div></div>
+          <figcaption>
+            <span class="num">23</span><h4>Objetos e memória</h4>
+            <p>Orientação a objetos com desenho: variáveis de um lado, objetos do outro, setas mostrando quem aponta para quem. Um toque troca <code>class</code> por <code>struct</code> e o aluno vê a cópia acontecer. É o mesmo conceito de referência × valor visto em JS, agora com tipos.</p>
+            <ul class="tags"><li>POO visual</li><li>class × struct</li><li>referência × valor</li></ul>
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <!-- ============ CONSTRUIR ============ -->
+    <div class="lane">
+      <div class="lane-label"><h3>Construir</h3><span>Projetos com checkpoints que cabem numa sessão, um tutor que pergunta em vez de responder, e um progresso que mostra aprendizado.</span></div>
+      <div class="lane-row">
+
+        <figure class="frame" id="s12">
+          <div class="phone"><div class="scr">
+            <div class="sbar"><span>20:05</span><span class="ic"><s></s><i></i></span></div>
+            <div class="hdr"><span class="back">‹</span><div style="flex:1;display:grid"><span class="t" style="font-size:13.5px">Buscador de filmes</span><span class="small muted">checkpoint 3 · buscar com fetch</span></div><span class="pill">app.js</span></div>
+            <div class="body">
+              <pre class="code"><span class="l">form.<span class="f">onsubmit</span> = (e) =&gt; {</span><span class="l">  e.<span class="f">preventDefault</span>();</span><span class="l hl">  <span class="k">const</span> r = <span class="f">fetch</span>(url + q);</span><span class="l">  <span class="f">mostrar</span>(r.results);</span><span class="l">};</span></pre>
+              <div class="console"><span class="dim">›</span> Promise {&lt;pending&gt;}</div>
+            </div>
+            <div class="scrim" style="background:transparent"></div>
+            <div class="sheet" style="box-shadow:0 -12px 30px -10px rgba(0,0,0,.35);top:250px;align-content:start">
+              <div class="row"><span class="h2m" style="flex:1">Tutor</span><span class="pill">vê seu código e o console</span></div>
+              <div style="display:grid;gap:8px">
+                <div class="msg me">por que aparece Promise pending e não os filmes?</div>
+                <div class="msg ai"><span class="who">tutor</span>Na hora em que a linha 3 termina, a resposta do servidor já chegou? O que <i>pending</i> sugere?</div>
+                <div class="msg me">ainda não chegou… preciso esperar?</div>
+                <div class="msg ai"><span class="who">tutor</span>Isso. Qual palavra faz o JS esperar uma Promise, e o que ela exige da função da linha 1?</div>
+              </div>
+              <div class="input">Responder ao tutor…<b>↑</b></div>
+              <div class="homebar"></div>
+            </div>
+          </div></div>
+          <figcaption>
+            <span class="num">24</span><h4>Projeto guiado + tutor socrático</h4>
+            <p>Projetos quebrados em checkpoints que cabem numa sessão, cada um com testes. O tutor (LLM) vê o código, o console e os testes, e é instruído a guiar com perguntas, nunca a colar a solução. Na etapa final, a pessoa publica o projeto com um toque.</p>
+            <ul class="tags"><li>projeto real</li><li>tutor que pergunta</li><li>publicar do app</li></ul>
+          </figcaption>
+        </figure>
+
+        <figure class="frame" id="s13">
+          <div class="phone"><div class="scr">
+            <div class="sbar"><span>20:20</span><span class="ic"><s></s><i></i></span></div>
+            <div class="hdr"><span class="t" style="font-size:20px">Seu progresso</span><span class="pill">8 semanas</span></div>
+            <div class="body">
+              <div class="kpis">
+                <div class="kpi"><span class="lbl">Retenção</span><b>87%</b><span class="small muted">acerto nas revisões</span></div>
+                <div class="kpi"><span class="lbl">Publicados</span><b>2</b><span class="small muted">projetos</span></div>
+              </div>
+              <span class="lbl">Domínio</span>
+              <div class="mastery">
+                <div><span>Lógica</span><div class="bar ok"><b style="width:95%"></b></div><span>95%</span></div>
+                <div><span>Pegar elem.</span><div class="bar ok"><b style="width:90%"></b></div><span>90%</span></div>
+                <div><span>Eventos</span><div class="bar acc"><b style="width:58%"></b></div><span>58%</span></div>
+                <div><span>Formulários</span><div class="bar acc"><b style="width:32%"></b></div><span>32%</span></div>
+                <div><span>C# · tipos</span><div class="bar acc"><b style="width:20%"></b></div><span>20%</span></div>
+              </div>
+              <span class="lbl">Seus erros recorrentes</span>
+              <div class="errs">
+                <div><span>Script antes do elemento (null)</span><span class="mono muted">4×</span></div>
+                <div><span>Chamar a função no listener</span><span class="mono muted">3×</span></div>
+                <div><span>Tratar <code>value</code> como número</span><span class="mono muted">2×</span></div>
+              </div>
+              <span class="btn sm" style="height:40px">Praticar meus erros · 5 min</span>
+            </div>
+            <div class="tabbar"><span><svg><use href="#i-hoje"/></svg>Hoje</span><span><svg><use href="#i-mapa"/></svg>Mapa</span><span><svg><use href="#i-pratica"/></svg>Praticar</span><span><svg><use href="#i-proj"/></svg>Projetos</span><span class="on"><svg><use href="#i-perfil"/></svg>Você</span></div>
+            <div class="homebar"></div>
+          </div></div>
+          <figcaption>
+            <span class="num">25</span><h4>Progresso honesto</h4>
+            <p>Retenção real e domínio por habilidade. Os erros que a pessoa mais repete são detectados nas tentativas e viram uma sessão de prática personalizada. Os projetos publicados formam um portfólio com link público.</p>
+            <ul class="tags"><li>erros viram prática</li><li>portfólio</li></ul>
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+
+   </div>
+  </div>
+</section>
+
+<div class="wrap">
+  <!-- ================= NÍVEL ZERO ================= -->
+  <section class="plan" id="zero">
+    <div class="sec-h">
+      <h2>Do básico do básico</h2>
+      <p>Toda linguagem começa no <b>nível zero</b>, explicada como para uma criança de 10 anos aprender. Ninguém precisa saber nada antes. Quem já sabe pula o nível zero pelo diagnóstico, mas ele existe em todas as trilhas.</p>
+    </div>
+    <ul class="rules">
+      <li><b>Ideia antes do nome</b><span>Primeiro a caixa com etiqueta. Só depois a palavra "variável".</span></li>
+      <li><b>Coisas do dia a dia</b><span>Receita, robô, caixa, controle remoto, roupa. Nada de termo técnico para explicar outro termo técnico.</span></li>
+      <li><b>Uma ideia por tela</b><span>Frases curtas, letra grande, no máximo duas frases antes de uma ação.</span></li>
+      <li><b>Desenho antes do código</b><span>A primeira vez que o código aparece, ele tem de 1 a 3 linhas e repete algo que o aluno já fez com o dedo.</span></li>
+      <li><b>Errar faz parte</b><span>O erro vem com explicação e uma nova tentativa, nunca com bronca ou perda de pontos.</span></li>
+      <li><b>Só avança quando consegue sozinho</b><span>Três acertos sem dica em dias diferentes antes de sair do nível zero.</span></li>
+    </ul>
+    <div class="zero-grid">
+      <div class="zc"><span class="id">L0</span><h3>O computador é um robô obediente</h3><p>Dar ordens na ordem certa (a receita do sanduíche), guardar coisas em caixas, fazer perguntas de sim ou não, repetir uma dança 3 vezes.</p><code>idade ← 8</code></div>
+      <div class="zc"><span class="id">F0</span><h3>A página é feita de caixinhas</h3><p>Uma tag é uma caixa com tampa: abre, guarda o conteúdo, fecha. O navegador lê as caixas e desenha a página. Primeiro arquivo salvo e aberto.</p><code>&lt;h1&gt;Olá!&lt;/h1&gt;</code></div>
+      <div class="zc"><span class="id">C0</span><h3>A roupa da página</h3><p>HTML é o corpo, CSS é a roupa. Toda regra responde três perguntas: em <b>quem</b>, <b>o quê</b> e <b>como</b>. "No título, a cor fica vermelha."</p><code>h1 { color: red; }</code></div>
+      <div class="zc"><span class="id">J0</span><h3>O computador falando com você</h3><p>JavaScript são ordens que o computador cumpre na hora. O console é onde ele responde. Fazer contas, guardar nomes, juntar textos.</p><code>console.log('Oi!');</code></div>
+      <div class="zc"><span class="id">W0</span><h3>O controle remoto da página</h3><p>O HTML é a TV, o JS é o controle remoto. O <code>id</code> é o nome escrito em cada botão do controle. Primeiro botão que troca um texto.</p><code>titulo.textContent = 'Oi!';</code></div>
+      <div class="zc"><span class="id">CS0</span><h3>Conversando com o computador</h3><p>Um programa é uma receita. Antes de cozinhar, um professor (o compilador) confere se está tudo escrito certo. WriteLine = o computador fala. ReadLine = ele escuta.</p><code>Console.WriteLine("Oi!");</code></div>
+    </div>
+  </section>
+
+  <!-- ================= FOCO ================= -->
+  <section class="plan" id="foco">
+    <div class="sec-h">
+      <h2>Foco: JavaScript dentro do HTML</h2>
+      <p>Muita gente sabe um pouco de HTML e um pouco de JS, mas não sabe ligar os dois: onde o script fica, como ele "enxerga" a página, como fazer um campo aceitar só números. Por isso isso vira uma trilha própria, <b>JS na página</b>, com um método único usado em todas as lições.</p>
+    </div>
+    <div class="recipe">
+      <div class="rc pg"><span class="lbl">1 · pegar</span><h3>Qual elemento?</h3><code>const botao =
+  document.querySelector('#botao');</code></div>
+      <div class="rc ov"><span class="lbl">2 · ouvir</span><h3>Quando?</h3><code>botao.addEventListener('click', () =&gt; {</code></div>
+      <div class="rc rg"><span class="lbl">3 · reagir</span><h3>O que acontece?</h3><code>  titulo.textContent = 'Você clicou!';
+});</code></div>
+    </div>
+    <p class="note">As três cores são as mesmas no app inteiro: no construtor de frases, no destaque do editor, nas dicas e nas mensagens dos testes. Com o tempo, o aluno passa a enxergar qualquer código de página como pegar, ouvir e reagir.</p>
+    <div class="decisions">
+      <div class="dec"><h3>Cinco passos, um de cada vez</h3><p>O primeiro módulo monta um único arquivo em cinco etapas: onde o script fica → pegar um elemento → mudar o elemento → reagir a um clique → ler o que foi digitado. Cada lição acrescenta uma coisa só.</p><span class="vs">W1–W6</span></div>
+      <div class="dec"><h3>Frase antes do código</h3><p>"Quando <i>clicar</i> no <i>#botao</i>, faça <i>mudar o texto</i>." O aluno monta a frase com blocos e vê o código gerado. Depois completa lacunas. No fim, escreve sozinho.</p><span class="vs">tela 13</span></div>
+      <div class="dec"><h3>Página e código ligados</h3><p>Tocar num elemento da página mostra a tag no HTML e a linha de JS que o pega. A pré-visualização fica sempre a um toque do código.</p><span class="vs">tela 12</span></div>
+      <div class="dec"><h3>Os erros clássicos viram lições</h3><p><code>null</code> por script no lugar errado, <code>fn()</code> no listener, <code>keydown</code> em vez de <code>input</code>, <code>value</code> tratado como número, esquecer <code>preventDefault</code>. Cada um tem explicação visual e um desafio de caça ao bug.</p><span class="vs">telas 14 · 16</span></div>
+      <div class="dec"><h3>Formulários de verdade</h3><p>Validar com HTML (<code>required</code>, <code>pattern</code>), bloquear e formatar com JS (só números, máscaras), habilitar o botão quando tudo estiver válido. Os testes digitam, colam e usam o teclado do celular.</p><span class="vs">tela 15</span></div>
+      <div class="dec"><h3>Revisão com a mesma receita</h3><p>Os cartões de revisão pedem para escrever pegar, ouvir e reagir para situações novas ("quando mudar o select, mostre o preço"), para o método virar reflexo.</p><span class="vs">tela 18</span></div>
+    </div>
+  </section>
+
+  <!-- ================= ARENA ================= -->
+  <section class="plan" id="arena">
+    <div class="sec-h">
+      <h2>Arena: luta por turno</h2>
+      <p>Um modo de prática em formato de jogo de luta por turno. Não é "acertou a pergunta, ganhou um soco": <b>o golpe é o próprio código</b>. Quem entende o conceito luta melhor, e quem não entende vê exatamente onde errou. As lições e o nível zero continuam calmos; a Arena serve para praticar o que já foi aprendido.</p>
+    </div>
+    <div class="tbl" style="margin-bottom:28px">
+      <table>
+        <thead><tr><th>Conceito aprendido</th><th>Vira no jogo</th><th>Exemplo de golpe</th></tr></thead>
+        <tbody>
+          <tr><td>Variável</td><td>A mochila: guarda energia, poções, vida</td><td><code>let pocoes = 2;</code></td></tr>
+          <tr><td>if / se</td><td>Reagir ao inimigo</td><td><code>if (inimigo.temEscudo) quebrarEscudo();</code></td></tr>
+          <tr><td>for / para</td><td>Golpe múltiplo</td><td><code>for (let i = 0; i &lt; 3; i++) socar();</code></td></tr>
+          <tr><td>while / enquanto</td><td>Fúria até o inimigo cair (gasta energia a cada volta)</td><td><code>while (inimigo.vida &gt; 0) socar();</code></td></tr>
+          <tr><td>Função</td><td>Combo com nome, criado por você e reutilizável</td><td><code>function combo() { chutar(); socar(); }</code></td></tr>
+          <tr><td>Evento (JS na página)</td><td>Contra-ataque automático</td><td><code>inimigo.addEventListener('ataque', defender);</code></td></tr>
+          <tr><td>Classe (C#)</td><td>Criar o seu próprio lutador</td><td><code>class Ninja : Lutador { … }</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <ul class="rules">
+      <li><b>Por turno, sem relógio</b><span>Pensar com calma é parte do jogo. Nenhum turno tem tempo limite.</span></li>
+      <li><b>Prever é defender</b><span>Na vez do inimigo, ele mostra o código do ataque. Quem prevê o dano certo escolhe a defesa certa.</span></li>
+      <li><b>Inimigos são erros clássicos</b><span>Fantasma do null, Gêmeos do ==, Apressado ( ), Loop Infinito. Vencer um é aprender a consertar aquele erro.</span></li>
+      <li><b>Chefão no fim de cada módulo</b><span>Exige tudo o que o módulo ensinou. Os chefões de C# começam em orientação a objetos.</span></li>
+      <li><b>Perder não tira nada</b><span>A derrota repassa o código e mostra onde o raciocínio falhou. Dá para tentar de novo na hora.</span></li>
+      <li><b>Vencer depende do código</b><span>Nada de vencer chutando ou comprando poção: golpes novos só vêm de lições concluídas. Duelos contra amigos, cada um na sua vez, ficam como opção futura.</span></li>
+    </ul>
+  </section>
+
+  <!-- ================= MOBILE ================= -->
+  <section class="plan" id="mobile">
+    <div class="sec-h">
+      <h2>Decisões de mobile</h2>
+      <p>Programar no celular é desconfortável. Então o app não tenta ser uma IDE de bolso: ele troca digitação longa por exercícios que treinam o raciocínio, e reserva a escrita de código para trechos curtos e bem apoiados.</p>
+    </div>
+    <div class="decisions">
+      <div class="dec"><h3>Toque primeiro, teclado depois</h3><p>Prever a saída, preencher o teste de mesa, montar frases, apontar a linha do bug, ordenar linhas e ajustar valores de CSS se fazem com o polegar. A escrita de código fica para passos curtos, com o teclado de código.</p><span class="vs">telas 07 · 08 · 13 · 16 · 17 · 18</span></div>
+      <div class="dec"><h3>Teclado de código próprio</h3><p>Uma barra fixa com <code>( ) { } [ ] ; =&gt; ' `</code>, setas de cursor, tab e sugestões do escopo atual. Fecha parênteses e aspas sozinho. No C#, as sugestões incluem tipos e <code>;</code> em destaque. "ABC" alterna para o teclado do sistema.</p><span class="vs">tela 10</span></div>
+      <div class="dec"><h3>Sessões de 5 a 15 minutos</h3><p>Cada lição cabe numa fila de ônibus. Tudo é salvo a cada passo: se a pessoa sai do app, volta exatamente onde parou.</p><span class="vs">telas 01 · 03</span></div>
+      <div class="dec"><h3>Notificação = revisão na hora certa</h3><p>Uma notificação por dia, no horário escolhido, só quando há cartões vencendo. Ela diz quanto tempo leva ("6 cartões · 4 min") e abre direto na revisão.</p><span class="vs">telas 01 · 18</span></div>
+      <div class="dec"><h3>Funciona offline</h3><p>Lógica, HTML, CSS e JS rodam no próprio aparelho. Compilar C#, o tutor e a publicação de projetos precisam de internet. No C#, os exercícios de previsão e o teste de mesa funcionam offline.</p><span class="vs">arquitetura</span></div>
+      <div class="dec"><h3>Projetos cabem no celular</h3><p>Checkpoints pequenos, com arquivos já organizados e uma pré-visualização em tela cheia. Para quem quiser, um editor web opcional abre o mesmo projeto no computador, sincronizado.</p><span class="vs">tela 24</span></div>
+    </div>
+  </section>
+
+  <!-- ================= PEDAGOGIA ================= -->
+  <section class="plan" id="pedagogia">
+    <div class="sec-h">
+      <h2>Princípios pedagógicos</h2>
+      <p>Cada tela vem de uma técnica com evidência em ciência da aprendizagem. Se uma funcionalidade não serve a nenhuma delas, ela não entra.</p>
+    </div>
+    <div class="principles">
+      <div class="pr"><h3>Prever antes de executar</h3><p>Comprometer-se com uma previsão expõe o modelo mental errado. O erro de previsão é o momento de maior aprendizado.</p><span class="where">telas 02 · 08 · 09 · 20 · 23</span></div>
+      <div class="pr"><h3>Exemplo resolvido → fading</h3><p>Iniciantes aprendem mais estudando soluções prontas. As lacunas crescem até a pessoa escrever sozinha.</p><span class="where">telas 08 · 10 · 13</span></div>
+      <div class="pr"><h3>Recuperação espaçada</h3><p>Lembrar dá mais trabalho que reler, e é isso que fixa. As revisões são agendadas pelo FSRS e conferidas executando.</p><span class="where">telas 03 · 18</span></div>
+      <div class="pr"><h3>Domínio antes de avançar</h3><p>Um nó só abre com os pré-requisitos dominados. Ver a lição inteira não é critério de progresso.</p><span class="where">telas 04 · 25</span></div>
+      <div class="pr"><h3>Modelo mental visível</h3><p>Fluxograma, teste de mesa, pilha, escopos, DOM, objetos na memória. A pessoa vê o que o computador faz em vez de decorar regras.</p><span class="where">telas 06 · 07 · 11 · 12 · 14 · 23</span></div>
+      <div class="pr"><h3>Dificuldade desejável</h3><p>Caça ao bug, intercalação e um tutor que pergunta. O esforço é o certo, e as dicas graduais evitam que a pessoa trave.</p><span class="where">telas 15 · 16 · 19 · 20 · 22 · 24</span></div>
+    </div>
+  </section>
+
+  <section class="plan" id="ciclo">
+    <div class="sec-h">
+      <h2>O ciclo de cada lição</h2>
+      <p>De 5 a 10 minutos, sempre na mesma ordem, em qualquer trilha. Cada etapa diz qual interação usa. Só as duas últimas pedem teclado.</p>
+    </div>
+    <ol class="cycle">
+      <li><b>Ativar</b><span>1 pergunta sobre o pré-requisito</span><em>toque</em></li>
+      <li><b>Ideia</b><span>Até 80 palavras, uma ideia por tela</span><em>leitura</em></li>
+      <li><b>Exemplo</b><span>Código resolvido, anotado linha a linha</span><em>deslizar</em></li>
+      <li class="hot"><b>Prever</b><span>Apostar na saída antes de rodar</span><em>toque</em></li>
+      <li><b>Lacunas</b><span>Completar trechos do código</span><em>teclado de código</em></li>
+      <li><b>Escrever</b><span>Resolver com testes automáticos</span><em>teclado de código</em></li>
+      <li><b>Agendar</b><span>Vira cartão de revisão</span><em>automático</em></li>
+    </ol>
+  </section>
+
+  <!-- ================= CURRÍCULO ================= -->
+  <section class="plan" id="curriculo">
+    <div class="sec-h">
+      <h2>Currículo</h2>
+      <p>Sete trilhas, com lógica de programação como base comum. Toda trilha começa no módulo 0, o nível zero. Daí o aluno segue pelo caminho web, pelo C# ou pelos dois. O projeto final full-stack junta um front-end feito na trilha web com uma API feita em C#.</p>
+    </div>
+    <div class="paths">
+      <div class="path"><b>Web</b><span>Lógica</span><i>→</i><span>Fundamentos</span><i>→</i><span>CSS</span><i>→</i><span>JavaScript</span><i>→</i><span class="hot">JS na página</span><i>→</i><span>Integração</span><small>~200 h</small></div>
+      <div class="path"><b>Back-end C#</b><span>Lógica</span><i>→</i><span>C# e .NET</span><small>~140 h</small></div>
+      <div class="path"><b>Full-stack</b><span>os dois caminhos</span><i>→</i><span>projeto final: front + API em C#</span><small>~330 h</small></div>
+    </div>
+    <div class="curr">
+      <div class="trk">
+        <h3>Lógica de programação</h3><span class="hrs">~30 h · 11 módulos · base de tudo</span>
+        <ul>
+          <li class="zero"><code>L0</code>Nível zero: o computador é um robô obediente</li>
+          <li><code>L1</code>O que é um algoritmo: passos, ordem, precisão</li>
+          <li><code>L2</code>Variáveis como caixas; tipos de dado</li>
+          <li><code>L3</code>Entrada, processamento, saída</li>
+          <li><code>L4</code>Operadores e expressões (aritméticos, lógicos, comparação)</li>
+          <li><code>L5</code>Decisões: se, senão, escolha</li>
+          <li><code>L6</code>Repetição: enquanto, para, contadores e acumuladores</li>
+          <li><code>L7</code>Teste de mesa e depuração à mão</li>
+          <li><code>L8</code>Vetores e listas</li>
+          <li><code>L9</code>Funções: dividir um problema em partes</li>
+          <li><code>L10</code>Algoritmos clássicos: maior valor, busca, contagem, ordenação simples</li>
+        </ul>
+        <div class="proj-tag"><b>Formato:</b> pseudocódigo em português, fluxograma e o mesmo algoritmo em JS e em C#</div>
+      </div>
+      <div class="trk">
+        <h3>Fundamentos da web</h3><span class="hrs">~25 h · 7 módulos</span>
+        <ul>
+          <li class="zero"><code>F0</code>Nível zero: a página é feita de caixinhas</li>
+          <li><code>F1</code>Como o navegador carrega uma página</li>
+          <li><code>F2</code>HTML semântico e estrutura</li>
+          <li><code>F3</code>Formulários e validação nativa</li>
+          <li><code>F4</code>Acessibilidade: ARIA, foco, leitores de tela</li>
+          <li><code>F5</code>Ler e depurar a página</li>
+          <li><code>F6</code>Publicar na web</li>
+        </ul>
+        <div class="proj-tag"><b>Projeto:</b> página de receitas acessível</div>
+      </div>
+      <div class="trk">
+        <h3>CSS de verdade</h3><span class="hrs">~35 h · 9 módulos</span>
+        <ul>
+          <li class="zero"><code>C0</code>Nível zero: a roupa da página</li>
+          <li><code>C1</code>Cascata, especificidade, herança</li>
+          <li><code>C2</code>Box model e fluxo normal</li>
+          <li><code>C3</code>Flexbox</li>
+          <li><code>C4</code>Grid</li>
+          <li><code>C5</code>Responsivo e container queries</li>
+          <li><code>C6</code>Custom properties e temas</li>
+          <li><code>C7</code>Transições e animação</li>
+          <li><code>C8</code>Organizando CSS em projetos</li>
+        </ul>
+        <div class="proj-tag"><b>Projeto:</b> landing page responsiva com tema escuro</div>
+      </div>
+      <div class="trk">
+        <h3>JavaScript</h3><span class="hrs">~45 h · 10 módulos</span>
+        <ul>
+          <li class="zero"><code>J0</code>Nível zero: o computador falando com você</li>
+          <li><code>J1</code>Valores, tipos, coerção</li>
+          <li><code>J2</code>Controle de fluxo</li>
+          <li><code>J3</code>Funções e escopo</li>
+          <li><code>J4</code>Arrays e objetos, referência × valor</li>
+          <li><code>J5</code>Closures</li>
+          <li><code>J6</code>Event loop e Promises</li>
+          <li><code>J7</code>async/await e fetch</li>
+          <li><code>J8</code>Módulos e organização</li>
+          <li><code>J9</code>Erros e testes</li>
+        </ul>
+        <div class="proj-tag"><b>Projeto:</b> conversor de moedas no console</div>
+      </div>
+      <div class="trk hot">
+        <h3>JS na página</h3><span class="hrs">~35 h · 11 módulos</span>
+        <ul>
+          <li class="zero"><code>W0</code>Nível zero: o controle remoto da página</li>
+          <li><code>W1</code>Como o navegador lê o HTML (de cima para baixo, DOM)</li>
+          <li><code>W2</code>Onde o script fica: fim do body, <code>defer</code>, arquivo externo</li>
+          <li><code>W3</code>Pegar elementos: <code>querySelector</code>, id, classe, vários</li>
+          <li><code>W4</code>Mudar elementos: texto, estilo, classes, <code>hidden</code>, atributos</li>
+          <li><code>W5</code>Eventos: pegar, ouvir, reagir</li>
+          <li><code>W6</code>Ler o que foi digitado: <code>value</code>, <code>Number()</code>, <code>checked</code></li>
+          <li><code>W7</code>Formulários: validar, bloquear, formatar, máscaras</li>
+          <li><code>W8</code>Criar e remover elementos; listas</li>
+          <li><code>W9</code>Estado → tela: guardar dados e redesenhar</li>
+          <li><code>W10</code>Salvar no navegador (<code>localStorage</code>)</li>
+        </ul>
+        <div class="proj-tag"><b>Projetos:</b> cadastro com máscaras · lista de compras · quiz</div>
+      </div>
+      <div class="trk">
+        <h3>Integração</h3><span class="hrs">~30 h · 4 projetos</span>
+        <ul>
+          <li><code>P1</code>Buscador de filmes (API, estados)</li>
+          <li><code>P2</code>Dashboard com gráfico em canvas</li>
+          <li><code>P3</code>Jogo no navegador, com controles de toque</li>
+          <li><code>P4</code>Projeto livre com revisão de pares</li>
+        </ul>
+        <div class="proj-tag"><b>Saída:</b> portfólio com 5+ projetos publicados</div>
+      </div>
+      <div class="trk span2">
+        <h3>C# e .NET</h3><span class="hrs">~110 h · 21 módulos · do zero à API com banco</span>
+        <ul>
+          <li class="grp">Fundamentos</li>
+          <li class="zero"><code>CS0</code>Nível zero: conversando com o computador</li>
+          <li><code>CS1</code>Como C# roda: .NET, compilação, primeiro programa</li>
+          <li><code>CS2</code>Tipos, variáveis, <code>var</code>, conversões, interpolação</li>
+          <li><code>CS3</code>Decisões, <code>switch</code> e pattern matching</li>
+          <li><code>CS4</code>Laços, arrays e strings</li>
+          <li><code>CS5</code>Métodos: parâmetros, retorno, <code>ref</code>/<code>out</code>, sobrecarga</li>
+          <li><code>CS6</code>Nulos com segurança: <code>?</code>, <code>??</code>, nullable</li>
+          <li class="grp">Orientação a objetos</li>
+          <li><code>CS7</code>Classes, objetos, propriedades, construtores</li>
+          <li><code>CS8</code>Encapsulamento e modificadores de acesso</li>
+          <li><code>CS9</code>Herança, <code>abstract</code>, polimorfismo</li>
+          <li><code>CS10</code>Interfaces e composição</li>
+          <li><code>CS11</code><code>record</code>, <code>struct</code>, valor × referência</li>
+          <li class="grp">C# moderno</li>
+          <li><code>CS12</code>Coleções: <code>List</code>, <code>Dictionary</code>, <code>HashSet</code></li>
+          <li><code>CS13</code>LINQ</li>
+          <li><code>CS14</code>Exceções e tratamento de erros</li>
+          <li><code>CS15</code>Delegates, lambdas e eventos</li>
+          <li><code>CS16</code>Generics</li>
+          <li><code>CS17</code><code>async</code>/<code>await</code>, <code>Task</code>, arquivos, JSON, <code>HttpClient</code></li>
+          <li class="grp">Back-end</li>
+          <li><code>CS18</code>Testes com xUnit</li>
+          <li><code>CS19</code>ASP.NET Core: Minimal APIs, rotas, injeção de dependência</li>
+          <li><code>CS20</code>Banco de dados com EF Core, migrations e deploy</li>
+        </ul>
+        <div class="proj-tag"><b>Projetos:</b> jogo de adivinhação (console) · sistema de biblioteca (POO) · API de tarefas com EF Core · <b>full-stack:</b> o front da trilha web consumindo a sua API</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= TÉCNICA ================= -->
+  <section class="plan" id="tecnica">
+    <div class="sec-h">
+      <h2>Arquitetura técnica</h2>
+      <p>O difícil é executar código do aluno com segurança e offline, testá-lo e desenhar sua execução, tudo dentro de um app nativo. Essas peças definem a stack.</p>
+    </div>
+    <div class="tbl">
+      <table>
+        <thead><tr><th>Peça</th><th>Escolha</th><th>Por quê</th></tr></thead>
+        <tbody>
+          <tr><td>App</td><td>React Native + Expo (TypeScript)</td><td class="why">Um código para iOS e Android. Builds e atualizações de conteúdo pelo EAS, sem esperar revisão da loja.</td></tr>
+          <tr><td>Editor</td><td>CodeMirror 6 dentro de uma WebView + teclado de código nativo</td><td class="why">CodeMirror é maduro para toque e seleção. A barra de símbolos e as sugestões ficam na parte nativa e são enviadas ao editor.</td></tr>
+          <tr><td>Execução</td><td>WebView isolada (<code>react-native-webview</code>), sem acesso à rede por padrão</td><td class="why">HTML, CSS e JS rodam num navegador real do aparelho, offline. Console e erros voltam por <code>postMessage</code>.</td></tr>
+          <tr><td>Testes</td><td>Runner próprio dentro da WebView</td><td class="why">Asserções de DOM, <code>getComputedStyle</code> e eventos simulados, com mensagens de falha escritas para iniciantes.</td></tr>
+          <tr><td>Página ↔ código</td><td>Script de inspeção injetado na WebView + mapa de posições do parser de HTML</td><td class="why">Ao tocar num elemento, o app sabe a linha da tag no arquivo, gera o seletor (<code>#id</code> ou classe) e lê as propriedades do objeto.</td></tr>
+          <tr><td>Frase → código</td><td>Blocos com gramática fechada (evento, elemento, ação, valor) → gerador de código</td><td class="why">Cada bloco sabe qual trecho de código gera, para acender a cor certa. Os níveis 2 e 3 reaproveitam os mesmos testes.</td></tr>
+          <tr><td>Lógica</td><td>Interpretador próprio de pseudocódigo em português → traduz para JS e C#</td><td class="why">Roda offline na WebView. O mesmo trace de execução alimenta o fluxograma, o teste de mesa e a visão em três línguas.</td></tr>
+          <tr><td>C#</td><td>Compilação no servidor: Roslyn + .NET em contêiner isolado, sem rede, com limite de tempo e memória</td><td class="why">Rodar o compilador de C# no celular ainda é pesado. O servidor responde em cerca de 1 s e devolve os diagnósticos (CS0029…), que o app traduz para português. Avaliar depois um pacote offline com .NET WebAssembly.</td></tr>
+          <tr><td>C# · memória</td><td>Trace gerado por instrumentação do código com Roslyn no servidor</td><td class="why">Registra variáveis, objetos e referências a cada passo. O app só desenha o trace, igual ao visualizador de JS.</td></tr>
+          <tr><td>ASP.NET no app</td><td>A API do aluno roda num contêiner temporário; o app faz as requisições</td><td class="why">Permite testar rotas e ver respostas JSON no celular. Nos projetos full-stack, a WebView do front consome essa API.</td></tr>
+          <tr><td>Arena</td><td>Motor de turnos determinístico + API do jogo (<code>socar()</code>, <code>quebrarEscudo()</code>…) exposta ao código do aluno</td><td class="why">O código roda na mesma WebView isolada, com limite de ações por turno (um <code>while</code> infinito só gasta a energia). O resultado vira um replay linha a linha. Animações com Rive ou Reanimated.</td></tr>
+          <tr><td>Visualizador</td><td>Instrumentação via Babel/Acorn → trace de passos</td><td class="why">Gera um trace com pilha, escopos e filas a cada passo. A tela só reproduz o trace, o que permite voltar no tempo.</td></tr>
+          <tr><td>Lab CSS</td><td>Comparação de geometria (<code>getBoundingClientRect</code>)</td><td class="why">Comparar posição e tamanho de cada elemento é mais estável que comparar pixels em telas de densidades diferentes.</td></tr>
+          <tr><td>Revisão</td><td>FSRS (ts-fsrs) + expo-notifications</td><td class="why">Calcula o intervalo de cada cartão no aparelho e agenda notificações locais. Funciona sem servidor.</td></tr>
+          <tr><td>Dados locais</td><td>SQLite (expo-sqlite) com sincronização</td><td class="why">Progresso, tentativas e cartões funcionam offline e sincronizam quando há conexão.</td></tr>
+          <tr><td>Tutor</td><td>Claude via API, chamado pelo back-end</td><td class="why">A chave nunca fica no app. O contexto inclui código, testes e histórico de erros. O prompt proíbe entregar a solução.</td></tr>
+          <tr><td>Conteúdo</td><td>MDX versionado em git → pacotes por módulo</td><td class="why">Lições revisadas por PR. Os exercícios são declarativos: código inicial, testes e equívocos previstos com o feedback de cada um.</td></tr>
+          <tr><td>Back-end</td><td>Postgres + API em Node (ou Supabase no MVP)</td><td class="why">Contas, sincronização, eventos de aprendizagem, publicação e hospedagem dos projetos.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ================= ROADMAP ================= -->
+  <section class="plan" id="roadmap">
+    <div class="sec-h">
+      <h2>Roadmap</h2>
+      <p>Começar pelo que mais importa: lógica e JS na página, com o teclado de código e a revisão com notificação. Visualizador e tutor entram depois de confirmar que as pessoas voltam. C# entra por último porque exige servidor de compilação.</p>
+    </div>
+    <div class="phases">
+      <div class="ph now"><span class="when">Fase 0 · semanas 1–6</span><h3>Protótipo</h3>
+        <ul><li>App Expo + WebView de execução</li><li>Teclado de código</li><li>Lógica L1–L6 com teste de mesa</li><li>JS na página W1–W5: frase → código e página ↔ código</li><li>Teste fechado (TestFlight e Play)</li></ul>
+        <p class="exit"><b>Pronto quando:</b> 8 de cada 10 pessoas que nunca ligaram JS ao HTML fazem sozinhas "quando clicar, mude o texto" ao fim do W5.</p></div>
+      <div class="ph"><span class="when">Fase 1 · meses 2–3</span><h3>MVP nas lojas</h3>
+        <ul><li>Contas, mapa, tela Hoje</li><li>Revisão FSRS + notificações</li><li>Lógica completa, Fundamentos, JS na página completo</li><li>Caça ao bug, offline</li></ul>
+        <p class="exit"><b>Pronto quando:</b> 35% voltam no dia 7 e a retenção nas revisões fica em 80% ou mais.</p></div>
+      <div class="ph"><span class="when">Fase 2 · meses 4–6</span><h3>Profundidade</h3>
+        <ul><li>Visualizador de execução</li><li>Lab CSS com alvo</li><li>CSS e JavaScript completos</li><li>Diagnóstico adaptativo</li></ul>
+        <p class="exit"><b>Pronto quando:</b> quem usa o visualizador acerta mais as previsões seguintes.</p></div>
+      <div class="ph"><span class="when">Fase 3 · meses 7–9</span><h3>Projetos e tutor</h3>
+        <ul><li>Projetos com checkpoints</li><li>Tutor socrático</li><li>Publicar do app + portfólio</li><li>Arena piloto: 3 inimigos + 1 chefão de JS na página</li></ul>
+        <p class="exit"><b>Pronto quando:</b> 25% de quem chega à trilha de JS publica um projeto, e quem joga a Arena acerta mais nas revisões de if e for do que quem não joga.</p></div>
+      <div class="ph"><span class="when">Fase 4 · meses 10–14</span><h3>C# e .NET</h3>
+        <ul><li>Servidor de compilação Roslyn</li><li>Erros do compilador traduzidos</li><li>CS1–CS11, depois CS12–CS20</li><li>Projeto full-stack com a API do aluno</li><li>Arena em todos os módulos, com chefões de C#</li></ul>
+        <p class="exit"><b>Pronto quando:</b> 60% de quem começa o CS1 chega à orientação a objetos (CS7).</p></div>
+    </div>
+  </section>
+
+  <section class="plan" id="metricas">
+    <div class="sec-h">
+      <h2>Como saber se ensina</h2>
+      <p>Métricas de aprendizado vêm antes de métricas de engajamento. Tempo de tela e sequência de dias, sozinhos, não provam nada.</p>
+    </div>
+    <div class="metrics">
+      <div class="mt"><b>≥ 80%</b><span>de acerto em revisões com intervalo de 30+ dias</span></div>
+      <div class="mt"><b>+25 pp</b><span>de ganho entre o pré-teste e o pós-teste de cada módulo</span></div>
+      <div class="mt"><b>≤ 15%</b><span>dos desafios resolvidos só com a dica final</span></div>
+      <div class="mt"><b>35%</b><span>de retorno no dia 7, com a revisão como motivo</span></div>
+    </div>
+    <div class="anti">
+      <div><s>Vídeo longo</s><span>Uma ideia por tela, sempre seguida de código.</span></div>
+      <div><s>Vidas e XP por tempo</s><span>Progresso só por domínio demonstrado. Na Arena, vence quem escreve o código certo.</span></div>
+      <div><s>Múltipla escolha como regra</s><span>Prever, apontar, ordenar e escrever. Tudo roda.</span></div>
+      <div><s>Tutor que cola a resposta</s><span>Perguntas guiadas. A solução custa domínio.</span></div>
+    </div>
+  </section>
+
+  <footer>Sintaxe · plano de produto v0.5 (arena, nível zero, lógica, web, JS na página e C#) · setembro de 2026</footer>
+</div>
+
+<script>
+(function(){
+  var board=document.getElementById('board');
+  var inner=document.getElementById('boardInner');
+  var down=false,sx=0,sy=0,sl=0,st=0,moved=false;
+  board.addEventListener('pointerdown',function(e){
+    if(e.pointerType!=='mouse'||e.button!==0)return;
+    down=true;moved=false;sx=e.clientX;sy=e.clientY;sl=board.scrollLeft;st=board.scrollTop;
+  });
+  window.addEventListener('pointermove',function(e){
+    if(!down)return;
+    var dx=e.clientX-sx,dy=e.clientY-sy;
+    if(!moved&&Math.abs(dx)+Math.abs(dy)>4){moved=true;board.classList.add('dragging');}
+    if(moved){board.scrollLeft=sl-dx;board.scrollTop=st-dy;}
+  });
+  window.addEventListener('pointerup',function(){down=false;board.classList.remove('dragging');});
+
+  var zbtns=document.querySelectorAll('[data-z]');
+  zbtns.forEach(function(b){
+    b.addEventListener('click',function(){
+      inner.style.zoom=b.dataset.z;
+      zbtns.forEach(function(x){x.setAttribute('aria-pressed',x===b?'true':'false');});
+      try{localStorage.setItem('sx-zoom',b.dataset.z);}catch(e){}
+    });
+  });
+  try{var z=localStorage.getItem('sx-zoom');if(z){var t=document.querySelector('[data-z="'+z+'"]');if(t)t.click();}}catch(e){}
+
+  var nb=document.getElementById('notes');
+  nb.addEventListener('click',function(){
+    var on=nb.getAttribute('aria-pressed')!=='true';
+    nb.setAttribute('aria-pressed',on?'true':'false');
+    board.classList.toggle('no-notes',!on);
+  });
+
+  document.getElementById('jump').addEventListener('click',function(e){
+    var b=e.target.closest('button');if(!b)return;
+    var el=document.getElementById(b.dataset.t);if(!el)return;
+    var br=board.getBoundingClientRect(),er=el.getBoundingClientRect();
+    board.scrollTo({left:board.scrollLeft+(er.left-br.left)-24,top:board.scrollTop+(er.top-br.top)-24,behavior:'smooth'});
+  });
+})();
+</script>
+</body>
+</html>
