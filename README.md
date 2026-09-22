@@ -2,7 +2,7 @@
 
 App de celular (iOS e Android) para aprender a programar de verdade: lógica de programação, HTML, CSS, JavaScript e C#, sempre começando do básico do básico.
 
-- **Plano completo com o canvas das 25 telas:** abra [`sintaxe.html`](sintaxe.html) no navegador.
+- **Plano completo com o canvas das 30 telas:** abra [`sintaxe.html`](sintaxe.html) no navegador.
 - **Versão online (privada):** https://claude.ai/artifact/Se7FpsGdiJ5cCK5ku1M8QP
 
 ## Ideias principais
@@ -13,6 +13,7 @@ App de celular (iOS e Android) para aprender a programar de verdade: lógica de 
 - **Revisão espaçada (FSRS)** com uma notificação por dia, só quando há revisão vencendo.
 - **Pensado para o celular:** exercícios de toque (prever, apontar o bug, ordenar linhas, montar frases) e um teclado próprio para código.
 - **Arena:** modo de prática em luta por turno em que o golpe é o próprio código. Os inimigos são erros clássicos e cada módulo termina com um chefão.
+- **Estudo mais profundo:** ensinar o Robô (o aluno explica um conceito para um aprendiz), escrever de memória no dia seguinte, um site pessoal que cresce a cada módulo, desafios fora do app (GitHub e VS Code) e exercícios com temas de que a pessoa gosta.
 
 ## Trilhas
 

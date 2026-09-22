@@ -52,12 +52,12 @@ a{color:inherit}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 
 /* ---------- header ---------- */
-.top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:18px;border-bottom:1px solid var(--line)}
+.pagetop{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:18px;border-bottom:1px solid var(--line)}
 .brand{font-family:var(--display);font-weight:800;font-size:20px;display:flex;align-items:center}
 .caret{display:inline-block;width:3px;height:1.05em;background:var(--accent);margin-left:3px;animation:blink 1.1s steps(1) infinite}
 @keyframes blink{50%{opacity:0}}
-.top nav{display:flex;gap:18px;flex-wrap:wrap;font-size:14px;color:var(--muted)}
-.top nav a{text-decoration:none}.top nav a:hover{color:var(--ink)}
+.pagetop nav{display:flex;gap:18px;flex-wrap:wrap;font-size:14px;color:var(--muted)}
+.pagetop nav a{text-decoration:none}.pagetop nav a:hover{color:var(--ink)}
 .hero{padding-block:56px 40px;display:grid;grid-template-columns:1.3fr 1fr;gap:48px;align-items:end}
 .eyebrow{font:600 12px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 .hero h1{font-size:clamp(34px,5.2vw,60px);font-weight:800;letter-spacing:-.02em;margin-top:14px}
@@ -391,6 +391,30 @@ pre.code .l.dim{opacity:.45}
 .reward{border-radius:14px;background:var(--accent-soft);padding:12px;display:grid;gap:4px}
 .reward .lbl{color:var(--accent-ink)}
 
+/* estudo mais profundo */
+.robot-row{display:grid;grid-template-columns:52px 1fr;gap:10px;align-items:end}
+.robot-row svg{width:52px;height:52px}
+.chat{display:grid;gap:8px}
+.evalbox{display:flex;gap:6px;flex-wrap:wrap}
+.peek{display:flex;justify-content:space-between;align-items:center;gap:8px;border:1.5px dashed var(--line);border-radius:12px;padding:8px 10px;font-size:12px;color:var(--muted)}
+.site{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--surface)}
+.site .hd{display:flex;align-items:center;gap:10px;padding:12px;background:var(--ink);color:var(--surface)}
+.site .hd i{width:34px;height:34px;border-radius:50%;background:var(--accent);flex:none}
+.site .hd b{font:700 14px var(--display);display:block}
+.site .hd small{font-size:11px;opacity:.75}
+.site .bd{padding:10px 12px;display:grid;gap:6px;font-size:12px}
+.site .bd .chips .chip{padding:3px 10px;font-size:11px}
+.site .toggle-dark{justify-self:start;border:1.5px dashed var(--accent-ink);color:var(--accent-ink);border-radius:8px;padding:3px 10px;font:600 11px var(--mono)}
+.stepsx{display:grid;gap:8px}
+.stepx{display:grid;grid-template-columns:28px 1fr;gap:10px;align-items:start;border:1.5px solid var(--line);border-radius:14px;padding:10px 12px}
+.stepx i{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font:700 12px var(--mono);font-style:normal;background:var(--surface-2);border:1.5px solid var(--line)}
+.stepx.d i{background:var(--ok);border-color:var(--ok);color:#fff}
+.stepx.c{border-color:var(--ink)}
+.stepx.c i{background:var(--accent);border-color:var(--ink);color:#1b1500}
+.stepx b{font-size:13px;display:block}
+.stepx small{font-size:11.5px;color:var(--muted);display:block}
+.stepx code{font-size:11px}
+
 /* C# */
 .memgrid{display:grid;grid-template-columns:1fr 1.25fr;gap:8px}
 .memcol{display:grid;gap:6px;align-content:start}
@@ -486,7 +510,7 @@ footer{padding-block:56px 40px;color:var(--muted);font-size:13px}
   .trk.span2{grid-column:auto}
   .rules{grid-template-columns:1fr}
   .trk.span2 ul{grid-template-columns:1fr}
-  .top nav{display:none}
+  .pagetop nav{display:none}
   .board{height:78vh}
 }
 @media (prefers-reduced-motion:reduce){.caret{animation:none}}
@@ -505,7 +529,7 @@ footer{padding-block:56px 40px;color:var(--muted);font-size:13px}
 </svg>
 
 <div class="wrap">
-  <header class="top">
+  <header class="pagetop">
     <div class="brand">Sintaxe<span class="caret" aria-hidden="true"></span></div>
     <nav aria-label="Seções">
       <a href="#telas">Telas</a><a href="#zero">Nível zero</a><a href="#foco">JS no HTML</a><a href="#arena">Arena</a><a href="#mobile">Mobile</a><a href="#pedagogia">Pedagogia</a><a href="#curriculo">Currículo</a><a href="#tecnica">Técnica</a><a href="#roadmap">Roadmap</a>
@@ -536,7 +560,7 @@ footer{padding-block:56px 40px;color:var(--muted);font-size:13px}
   <div class="canvas-head">
     <div>
       <h2>Canvas de telas</h2>
-      <p>25 telas agrupadas pelo caminho do aluno: entrar → lógica → aprender → JS na página → praticar → arena → C# → construir. Arraste para navegar ou use os atalhos.</p>
+      <p>30 telas agrupadas pelo caminho do aluno: entrar → lógica → aprender → JS na página → praticar → estudo mais profundo → arena → C# → construir. Arraste para navegar ou use os atalhos.</p>
     </div>
     <div class="tools" role="group" aria-label="Controles do canvas">
       <button type="button" id="z50" data-z="0.5">50%</button>
@@ -564,13 +588,18 @@ footer{padding-block:56px 40px;color:var(--muted);font-size:13px}
     <button type="button" data-t="s9">16 Debug</button>
     <button type="button" data-t="s10">17 Lab CSS</button>
     <button type="button" data-t="s11">18 Revisão</button>
-    <button type="button" data-t="sA1">19 Arena: inimigos</button>
-    <button type="button" data-t="sA2">20 Arena: turno</button>
-    <button type="button" data-t="sA3">21 Arena: vitória</button>
-    <button type="button" data-t="sC1">22 C#: compilador</button>
-    <button type="button" data-t="sC2">23 C#: objetos</button>
-    <button type="button" data-t="s12">24 Projeto</button>
-    <button type="button" data-t="s13">25 Progresso</button>
+    <button type="button" data-t="sP1">19 Ensinar o Robô</button>
+    <button type="button" data-t="sP2">20 De memória</button>
+    <button type="button" data-t="sP3">21 Meu site</button>
+    <button type="button" data-t="sP4">22 Para o computador</button>
+    <button type="button" data-t="sP5">23 Do que você gosta</button>
+    <button type="button" data-t="sA1">24 Arena: inimigos</button>
+    <button type="button" data-t="sA2">25 Arena: turno</button>
+    <button type="button" data-t="sA3">26 Arena: vitória</button>
+    <button type="button" data-t="sC1">27 C#: compilador</button>
+    <button type="button" data-t="sC2">28 C#: objetos</button>
+    <button type="button" data-t="s12">29 Projeto</button>
+    <button type="button" data-t="s13">30 Progresso</button>
   </div>
 
   <div class="board" id="board" tabindex="0" aria-label="Canvas com as telas do app">
@@ -1096,6 +1125,143 @@ footer{padding-block:56px 40px;color:var(--muted);font-size:13px}
       </div>
     </div>
 
+    <!-- ============ ESTUDO MAIS PROFUNDO ============ -->
+    <div class="lane">
+      <div class="lane-label"><h3>Estudo mais profundo</h3><span>Explicar para alguém, lembrar sem olhar, construir algo seu, levar o que aprendeu para fora do app e estudar com exemplos do que você gosta.</span></div>
+      <div class="lane-row">
+
+        <figure class="frame" id="sP1">
+          <div class="phone"><div class="scr">
+            <div class="sbar"><span>19:50</span><span class="ic"><s></s><i></i></span></div>
+            <div class="hdr"><span class="back">✕</span><span class="t">Ensine o Robô</span><span class="pill info">explicar</span></div>
+            <div class="body" style="gap:10px">
+              <div class="robot-row">
+                <svg viewBox="0 0 52 52" aria-hidden="true"><path d="M26 4 V10" stroke="var(--ink)" stroke-width="2"/><circle cx="26" cy="4" r="3" fill="var(--accent)" stroke="var(--ink)" stroke-width="1.5"/><rect x="8" y="10" width="36" height="28" rx="9" fill="var(--surface)" stroke="var(--ink)" stroke-width="2"/><circle cx="19" cy="23" r="4" fill="var(--info)"/><circle cx="33" cy="23" r="4" fill="var(--info)"/><path d="M20 31 q6 4 12 0" fill="none" stroke="var(--ink)" stroke-width="2" stroke-linecap="round"/><rect x="14" y="40" width="24" height="10" rx="4" fill="var(--surface-2)" stroke="var(--ink)" stroke-width="2"/></svg>
+                <div class="msg ai" style="max-width:100%"><span class="who">Robô</span>Eu acho que <code>=</code> e <code>===</code> são a mesma coisa. Os dois comparam, né?</div>
+              </div>
+              <div class="chat">
+                <div class="msg me">Não! O <code>=</code> guarda um valor na caixa. O <code>===</code> pergunta se duas coisas são iguais.</div>
+                <div class="msg ai"><span class="who">Robô</span>Ahh! Então <code>idade = 8</code> guarda o 8, e <code>idade === 8</code> pergunta se é 8? E o <code>==</code> com dois, faz o quê?</div>
+              </div>
+              <div class="card soft">
+                <span class="lbl">Sua explicação</span>
+                <div class="evalbox"><span class="pill ok">clara</span><span class="pill ok">exemplo certo</span><span class="pill acc">faltou: ==</span></div>
+              </div>
+              <div class="input">Responder ao Robô…<b>↑</b></div>
+            </div>
+            <div class="homebar"></div>
+          </div></div>
+          <figcaption>
+            <span class="num">19</span><h4>Ensine o Robô</h4>
+            <p>De vez em quando, os papéis se invertem: o Robô, um aprendiz que "não sabe nada", tem uma ideia errada e o aluno precisa explicar. O tutor avalia a explicação (clareza, exemplo, o que faltou), e o Robô faz uma pergunta de volta para puxar o próximo detalhe. Quem consegue explicar para uma criança realmente entendeu.</p>
+            <ul class="tags"><li>aprender ensinando</li><li>ideias erradas comuns</li><li>combina com o nível zero</li></ul>
+          </figcaption>
+        </figure>
+
+        <figure class="frame" id="sP2">
+          <div class="phone"><div class="scr">
+            <div class="sbar"><span>07:40</span><span class="ic"><s></s><i></i></span></div>
+            <div class="hdr"><span class="back">✕</span><span class="t">Escreva de memória</span><span class="pill">feito ontem</span></div>
+            <div class="body" style="gap:10px">
+              <p style="font-size:13px">Ontem você fez isto com o exemplo aberto. Agora escreva <b>sem olhar</b>:</p>
+              <div class="sent" style="font-size:13px"><span>Quando</span><span class="bk ov">clicar</span><span>no</span><span class="bk pg">#btn</span><span>, mude o texto de</span><span class="bk pg">#msg</span></div>
+              <pre class="code"><span class="l"><span class="k">const</span> btn =</span><span class="l">  document.<span class="f">querySelector</span>(<span class="s">'#btn'</span>);</span><span class="l"><span class="k">const</span> msg =</span><span class="l">  document.<span class="f">querySelector</span>(<span class="s">'#msg'</span>);</span><span class="l">btn.<span class="f">addEventListener</span>(<span class="s">'click'</span>, () =&gt; {</span><span class="l err">  msg.text = <span class="s">'Oi!'</span>;</span><span class="l">});</span></pre>
+              <div style="display:grid;gap:5px;font-size:12px">
+                <div class="row" style="gap:8px"><b style="color:var(--ok)">✓</b><span><b style="color:var(--info)">pegar</b>: os dois elementos certos</span></div>
+                <div class="row" style="gap:8px"><b style="color:var(--ok)">✓</b><span><b style="color:var(--accent-ink)">ouvir</b>: o clique no botão</span></div>
+                <div class="row" style="gap:8px;align-items:flex-start"><b style="color:var(--bad)">✗</b><span><b style="color:var(--ok)">reagir</b>: <code>text</code> não existe. Lembra qual era o nome?</span></div>
+              </div>
+              <div class="peek"><span>Espiar o exemplo</span><span class="mono">o cartão volta mais cedo</span></div>
+            </div>
+            <div class="cta"><span class="btn pri">Tentar de novo</span></div>
+            <div class="homebar"></div>
+          </div></div>
+          <figcaption>
+            <span class="num">20</span><h4>Escrever de memória</h4>
+            <p>No dia seguinte a uma lição, o app pede para refazer o mesmo código sem olhar, só a partir da frase. A correção separa pegar, ouvir e reagir para mostrar exatamente o que foi esquecido. Espiar é permitido, mas faz o cartão voltar mais cedo na revisão. Lembrar dá trabalho, e é esse esforço que fixa.</p>
+            <ul class="tags"><li>recuperação ativa</li><li>correção por parte</li><li>espiar tem custo</li></ul>
+          </figcaption>
+        </figure>
+
+        <figure class="frame" id="sP3">
+          <div class="phone"><div class="scr">
+            <div class="sbar"><span>20:10</span><span class="ic"><s></s><i></i></span></div>
+            <div class="hdr"><span class="t" style="font-size:20px">Meu site</span><span class="pill ok">no ar</span></div>
+            <div class="body" style="gap:10px">
+              <div class="site">
+                <div class="hd"><i></i><div><b>Olá, eu sou o Diego</b><small>Aprendendo a programar · semana 5</small></div></div>
+                <div class="bd">
+                  <span class="lbl">Do que eu gosto</span>
+                  <div class="chips"><span class="chip">Futebol</span><span class="chip">Games</span><span class="chip">Música</span></div>
+                  <span class="toggle-dark">+ botão de tema escuro</span>
+                </div>
+              </div>
+              <span class="lbl">O site cresce a cada módulo</span>
+              <div class="tree">
+                <div class="tn d"><i>✓</i><div><b>HTML: título, foto e gostos</b><small>semana 1</small></div></div>
+                <div class="tn d"><i>✓</i><div><b>CSS: cores e layout no celular</b><small>semana 3</small></div></div>
+                <div class="tn c"><i>3</i><div><b>JS na página: botão de tema escuro</b><small>missão desta semana</small></div></div>
+                <div class="tn l"><i>4</i><div><b>Formulário de contato</b><small>depois de Formulários</small></div></div>
+                <div class="tn l"><i>5</i><div><b>Mural de recados com API em C#</b><small>trilha C#</small></div></div>
+              </div>
+            </div>
+            <div class="cta"><span class="btn acc">Fazer a missão da semana</span></div>
+            <div class="homebar"></div>
+          </div></div>
+          <figcaption>
+            <span class="num">21</span><h4>Projeto pessoal: o seu site</h4>
+            <p>Na primeira semana, a pessoa publica uma página sobre ela mesma. A cada módulo, ganha uma missão para aplicar o que aprendeu no próprio site: estilo, um botão de tema escuro, um formulário de contato e, na trilha de C#, um mural de recados com API. No fim, é um site dela, feito por ela e no ar.</p>
+            <ul class="tags"><li>projeto que cresce</li><li>missão semanal</li><li>publicado desde a semana 1</li></ul>
+          </figcaption>
+        </figure>
+
+        <figure class="frame" id="sP4">
+          <div class="phone"><div class="scr">
+            <div class="sbar"><span>21:00</span><span class="ic"><s></s><i></i></span></div>
+            <div class="hdr"><span class="back">‹</span><span class="t">Leve para o computador</span></div>
+            <div class="body" style="gap:10px">
+              <p style="font-size:13px">Programar de verdade também acontece fora do app. Três passos:</p>
+              <div class="stepsx">
+                <div class="stepx d"><i>✓</i><div><b>Exportar para o GitHub</b><small>Repositório <code>meu-site</code> criado com todo o seu código</small></div></div>
+                <div class="stepx c"><i>2</i><div><b>Desafio no VS Code</b><small>No computador, adicione uma seção "Projetos" ao seu site e envie com <code>git push</code>. O app confere sozinho.</small><span class="pill acc" style="margin-top:6px">aguardando seu push…</span></div></div>
+                <div class="stepx"><i>3</i><div><b>Ler código de verdade</b><small>Abra o código de um site real e ache o <code>addEventListener</code> de um botão. Depois explique para o Robô o que ele faz.</small></div></div>
+              </div>
+              <div class="card soft"><span class="lbl">No computador</span><span class="small">Acesse <b class="mono">sintaxe.app/pc</b> para ver o passo a passo de como instalar o VS Code e o Git.</span></div>
+            </div>
+            <div class="cta"><span class="btn pri">Já enviei, conferir</span></div>
+            <div class="homebar"></div>
+          </div></div>
+          <figcaption>
+            <span class="num">22</span><h4>Sair do app</h4>
+            <p>Para não ficar preso em tutoriais, a partir da trilha JS na página o app propõe desafios fora dele: exportar o projeto para o GitHub, fazer uma mudança no computador com o VS Code (o app confere o push) e ler código de sites reais. O objetivo é programar sem depender do app.</p>
+            <ul class="tags"><li>GitHub</li><li>VS Code</li><li>código do mundo real</li></ul>
+          </figcaption>
+        </figure>
+
+        <figure class="frame" id="sP5">
+          <div class="phone"><div class="scr">
+            <div class="sbar"><span>9:43</span><span class="ic"><s></s><i></i></span></div>
+            <div class="hdr"><div class="segs" style="flex:1"><i class="d"></i><i class="d"></i><i class="c"></i></div></div>
+            <div class="body" style="gap:12px">
+              <div class="h1m">Do que você gosta?</div>
+              <p class="muted" style="font-size:12.5px">Os exercícios vão usar esses temas. Escolha quantos quiser e mude quando quiser.</p>
+              <div class="chips"><span class="chip on">Futebol</span><span class="chip on">Games</span><span class="chip">Música</span><span class="chip">Receitas</span><span class="chip">Animes</span><span class="chip">Carros</span><span class="chip">Filmes</span><span class="chip">Animais</span></div>
+              <span class="lbl">Assim fica um exercício de for</span>
+              <pre class="code"><span class="l"><span class="k">const</span> time = [<span class="s">'Goleiro'</span>, <span class="s">'Zagueiro'</span>,</span><span class="l">  <span class="s">'Meia'</span>, <span class="s">'Atacante'</span>];</span><span class="l"><span class="k">for</span> (<span class="k">const</span> jogador <span class="k">of</span> time) {</span><span class="l">  console.<span class="f">log</span>(<span class="s">'Em campo: '</span> + jogador);</span><span class="l">}</span></pre>
+              <div class="card soft"><span class="lbl">Com Games</span><span class="small">O mesmo <code>for</code> percorre o inventário do personagem: espada, escudo, poção.</span></div>
+            </div>
+            <div class="cta"><span class="btn pri">Continuar</span></div>
+            <div class="homebar"></div>
+          </div></div>
+          <figcaption>
+            <span class="num">23</span><h4>Exemplos com o que você gosta</h4>
+            <p>Na entrada, logo depois do objetivo, a pessoa escolhe temas de que gosta. O conceito e os testes são os mesmos para todos; só mudam os nomes e os dados do exemplo. O mesmo <code>for</code> percorre o time, o inventário do jogo ou a playlist, e os exercícios ficam com cara de coisa dela.</p>
+            <ul class="tags"><li>personalização</li><li>mesmo conceito, outro tema</li><li>editável depois</li></ul>
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+
     <!-- ============ ARENA ============ -->
     <div class="lane">
       <div class="lane-label"><h3>Arena</h3><span class="pill" style="font-size:11px">modo de prática</span><span>Luta por turno em que o golpe é o código. Serve para praticar e revisar o que já foi aprendido; as lições continuam calmas. Cada inimigo é um erro clássico e cada módulo termina com um chefão.</span></div>
@@ -1132,7 +1298,7 @@ footer{padding-block:56px 40px;color:var(--muted);font-size:13px}
             <div class="homebar"></div>
           </div></div>
           <figcaption>
-            <span class="num">19</span><h4>Escolher o inimigo</h4>
+            <span class="num">24</span><h4>Escolher o inimigo</h4>
             <p>Cada módulo tem sua arena. Os inimigos são os erros clássicos daquele assunto, e a "fraqueza" de cada um é o conceito que o derrota. O chefão só abre depois dos outros e exige tudo o que o módulo ensinou.</p>
             <ul class="tags"><li>inimigos = erros clássicos</li><li>chefão por módulo</li></ul>
           </figcaption>
@@ -1164,7 +1330,7 @@ footer{padding-block:56px 40px;color:var(--muted);font-size:13px}
             <div class="homebar"></div>
           </div></div>
           <figcaption>
-            <span class="num">20</span><h4>O turno: o golpe é o código</h4>
+            <span class="num">25</span><h4>O turno: o golpe é o código</h4>
             <p>Na sua vez, você escreve o ataque com os golpes que já aprendeu. O <code>for</code> é o golpe triplo e o <code>if</code> reage ao escudo. Se você escrever <code>i &lt; 2</code>, só saem dois socos, e a luta mostra o motivo. Na vez do inimigo, ele mostra o código do ataque dele e você <b>prevê o dano</b> para escolher a defesa.</p>
             <ul class="tags"><li>conceito = habilidade</li><li>prever = defender</li><li>por turno, sem pressa</li></ul>
           </figcaption>
@@ -1195,7 +1361,7 @@ footer{padding-block:56px 40px;color:var(--muted);font-size:13px}
             <div class="homebar"></div>
           </div></div>
           <figcaption>
-            <span class="num">21</span><h4>Vitória que ensina</h4>
+            <span class="num">26</span><h4>Vitória que ensina</h4>
             <p>O resultado repassa o próprio código, linha por linha: o que cada linha fez e quanto dano causou. Na derrota, a mesma tela mostra onde o raciocínio falhou e deixa tentar de novo, sem perder nada. Os golpes novos são liberados por lições, nunca comprados.</p>
             <ul class="tags"><li>replay linha a linha</li><li>perder não pune</li><li>golpes vêm de lições</li></ul>
           </figcaption>
@@ -1228,7 +1394,7 @@ footer{padding-block:56px 40px;color:var(--muted);font-size:13px}
             <div class="homebar"></div>
           </div></div>
           <figcaption>
-            <span class="num">22</span><h4>Compilador explicado</h4>
+            <span class="num">27</span><h4>Compilador explicado</h4>
             <p>Cada erro de compilação do C# (CS0029, CS0103, CS1002…) vem com uma tradução para iniciantes e dicas graduais. Quem já passou pela trilha web ganha a comparação com JavaScript, que mostra por que tipos estáticos evitam bugs.</p>
             <ul class="tags"><li>erros traduzidos</li><li>tipos estáticos</li><li>ponte com JS</li></ul>
           </figcaption>
@@ -1261,7 +1427,7 @@ footer{padding-block:56px 40px;color:var(--muted);font-size:13px}
             <div class="homebar"></div>
           </div></div>
           <figcaption>
-            <span class="num">23</span><h4>Objetos e memória</h4>
+            <span class="num">28</span><h4>Objetos e memória</h4>
             <p>Orientação a objetos com desenho: variáveis de um lado, objetos do outro, setas mostrando quem aponta para quem. Um toque troca <code>class</code> por <code>struct</code> e o aluno vê a cópia acontecer. É o mesmo conceito de referência × valor visto em JS, agora com tipos.</p>
             <ul class="tags"><li>POO visual</li><li>class × struct</li><li>referência × valor</li></ul>
           </figcaption>
@@ -1296,7 +1462,7 @@ footer{padding-block:56px 40px;color:var(--muted);font-size:13px}
             </div>
           </div></div>
           <figcaption>
-            <span class="num">24</span><h4>Projeto guiado + tutor socrático</h4>
+            <span class="num">29</span><h4>Projeto guiado + tutor socrático</h4>
             <p>Projetos quebrados em checkpoints que cabem numa sessão, cada um com testes. O tutor (LLM) vê o código, o console e os testes, e é instruído a guiar com perguntas, nunca a colar a solução. Na etapa final, a pessoa publica o projeto com um toque.</p>
             <ul class="tags"><li>projeto real</li><li>tutor que pergunta</li><li>publicar do app</li></ul>
           </figcaption>
@@ -1331,7 +1497,7 @@ footer{padding-block:56px 40px;color:var(--muted);font-size:13px}
             <div class="homebar"></div>
           </div></div>
           <figcaption>
-            <span class="num">25</span><h4>Progresso honesto</h4>
+            <span class="num">30</span><h4>Progresso honesto</h4>
             <p>Retenção real e domínio por habilidade. Os erros que a pessoa mais repete são detectados nas tentativas e viram uma sessão de prática personalizada. Os projetos publicados formam um portfólio com link público.</p>
             <ul class="tags"><li>erros viram prática</li><li>portfólio</li></ul>
           </figcaption>
@@ -1434,7 +1600,7 @@ footer{padding-block:56px 40px;color:var(--muted);font-size:13px}
       <div class="dec"><h3>Sessões de 5 a 15 minutos</h3><p>Cada lição cabe numa fila de ônibus. Tudo é salvo a cada passo: se a pessoa sai do app, volta exatamente onde parou.</p><span class="vs">telas 01 · 03</span></div>
       <div class="dec"><h3>Notificação = revisão na hora certa</h3><p>Uma notificação por dia, no horário escolhido, só quando há cartões vencendo. Ela diz quanto tempo leva ("6 cartões · 4 min") e abre direto na revisão.</p><span class="vs">telas 01 · 18</span></div>
       <div class="dec"><h3>Funciona offline</h3><p>Lógica, HTML, CSS e JS rodam no próprio aparelho. Compilar C#, o tutor e a publicação de projetos precisam de internet. No C#, os exercícios de previsão e o teste de mesa funcionam offline.</p><span class="vs">arquitetura</span></div>
-      <div class="dec"><h3>Projetos cabem no celular</h3><p>Checkpoints pequenos, com arquivos já organizados e uma pré-visualização em tela cheia. Para quem quiser, um editor web opcional abre o mesmo projeto no computador, sincronizado.</p><span class="vs">tela 24</span></div>
+      <div class="dec"><h3>Projetos cabem no celular</h3><p>Checkpoints pequenos, com arquivos já organizados e uma pré-visualização em tela cheia. Para quem quiser, um editor web opcional abre o mesmo projeto no computador, sincronizado.</p><span class="vs">tela 29</span></div>
     </div>
   </section>
 
@@ -1445,12 +1611,12 @@ footer{padding-block:56px 40px;color:var(--muted);font-size:13px}
       <p>Cada tela vem de uma técnica com evidência em ciência da aprendizagem. Se uma funcionalidade não serve a nenhuma delas, ela não entra.</p>
     </div>
     <div class="principles">
-      <div class="pr"><h3>Prever antes de executar</h3><p>Comprometer-se com uma previsão expõe o modelo mental errado. O erro de previsão é o momento de maior aprendizado.</p><span class="where">telas 02 · 08 · 09 · 20 · 23</span></div>
+      <div class="pr"><h3>Prever antes de executar</h3><p>Comprometer-se com uma previsão expõe o modelo mental errado. O erro de previsão é o momento de maior aprendizado.</p><span class="where">telas 02 · 08 · 09 · 25 · 28</span></div>
       <div class="pr"><h3>Exemplo resolvido → fading</h3><p>Iniciantes aprendem mais estudando soluções prontas. As lacunas crescem até a pessoa escrever sozinha.</p><span class="where">telas 08 · 10 · 13</span></div>
-      <div class="pr"><h3>Recuperação espaçada</h3><p>Lembrar dá mais trabalho que reler, e é isso que fixa. As revisões são agendadas pelo FSRS e conferidas executando.</p><span class="where">telas 03 · 18</span></div>
-      <div class="pr"><h3>Domínio antes de avançar</h3><p>Um nó só abre com os pré-requisitos dominados. Ver a lição inteira não é critério de progresso.</p><span class="where">telas 04 · 25</span></div>
-      <div class="pr"><h3>Modelo mental visível</h3><p>Fluxograma, teste de mesa, pilha, escopos, DOM, objetos na memória. A pessoa vê o que o computador faz em vez de decorar regras.</p><span class="where">telas 06 · 07 · 11 · 12 · 14 · 23</span></div>
-      <div class="pr"><h3>Dificuldade desejável</h3><p>Caça ao bug, intercalação e um tutor que pergunta. O esforço é o certo, e as dicas graduais evitam que a pessoa trave.</p><span class="where">telas 15 · 16 · 19 · 20 · 22 · 24</span></div>
+      <div class="pr"><h3>Recuperação espaçada</h3><p>Lembrar dá mais trabalho que reler, e é isso que fixa. As revisões são agendadas pelo FSRS e conferidas executando.</p><span class="where">telas 03 · 18 · 20</span></div>
+      <div class="pr"><h3>Domínio antes de avançar</h3><p>Um nó só abre com os pré-requisitos dominados. Ver a lição inteira não é critério de progresso.</p><span class="where">telas 04 · 30</span></div>
+      <div class="pr"><h3>Modelo mental visível</h3><p>Fluxograma, teste de mesa, pilha, escopos, DOM, objetos na memória. A pessoa vê o que o computador faz em vez de decorar regras.</p><span class="where">telas 06 · 07 · 11 · 12 · 14 · 28</span></div>
+      <div class="pr"><h3>Dificuldade desejável</h3><p>Caça ao bug, intercalação e um tutor que pergunta. O esforço é o certo, e as dicas graduais evitam que a pessoa trave.</p><span class="where">telas 15 · 16 · 24 · 25 · 27 · 29</span></div>
     </div>
   </section>
 
@@ -1681,7 +1847,7 @@ footer{padding-block:56px 40px;color:var(--muted);font-size:13px}
     </div>
   </section>
 
-  <footer>Sintaxe · plano de produto v0.5 (arena, nível zero, lógica, web, JS na página e C#) · setembro de 2026</footer>
+  <footer>Sintaxe · plano de produto v0.6 (estudo mais profundo, arena, nível zero, lógica, web, JS na página e C#) · setembro de 2026</footer>
 </div>
 
 <script>
